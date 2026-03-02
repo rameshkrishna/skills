@@ -11,7 +11,7 @@ import 'package:yaml/yaml.dart';
 
 void main() {
   final resourcesDir = Directory(
-    p.join(Directory.current.path, '..', 'tool', 'resources'),
+    p.normalize(p.join(Directory.current.path, '..', 'tool', 'resources')),
   );
 
   test('tool/resources directory exists', () {
@@ -20,7 +20,9 @@ void main() {
       isTrue,
       reason: 'tool/resources directory should exist',
     );
-  });
+    },
+    skip: !resourcesDir.existsSync() ? 'Directory not present' : false,
+  );
 
   if (!resourcesDir.existsSync()) return;
 

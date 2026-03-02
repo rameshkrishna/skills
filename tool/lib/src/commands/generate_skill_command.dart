@@ -14,8 +14,11 @@ import 'base_skill_command.dart';
 /// Command to generate skills from a configuration file.
 class GenerateSkillCommand extends BaseSkillCommand {
   /// Creates a new [GenerateSkillCommand].
-  GenerateSkillCommand({required super.httpClient, super.outputDir})
-    : super(logger: Logger('GenerateSkillCommand'));
+  GenerateSkillCommand({
+    required super.httpClient,
+    super.outputDir,
+    super.environment,
+  }) : super(logger: Logger('GenerateSkillCommand'));
 
   @override
   String get name => 'generate-skill';

@@ -67,6 +67,7 @@ void main() {
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             validationDir: validationDir,
             httpClient: mockClient,
@@ -136,6 +137,7 @@ void main() {
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             validationDir: validationDir,
             httpClient: mockClient,
@@ -180,6 +182,7 @@ void main() {
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             validationDir: validationDir,
             httpClient: mockClient,
@@ -199,7 +202,11 @@ void main() {
 
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
-          ValidateSkillCommand(outputDir: skillsDir, httpClient: mockClient),
+          ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
+            outputDir: skillsDir,
+            httpClient: mockClient,
+          ),
         );
 
       await IOOverrides.runZoned(() async {
@@ -240,7 +247,11 @@ void main() {
 
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
-          ValidateSkillCommand(outputDir: skillsDir, httpClient: mockClient),
+          ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
+            outputDir: skillsDir,
+            httpClient: mockClient,
+          ),
         );
 
       await IOOverrides.runZoned(() async {
@@ -274,7 +285,11 @@ void main() {
 
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
-          ValidateSkillCommand(outputDir: skillsDir, httpClient: mockClient),
+          ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
+            outputDir: skillsDir,
+            httpClient: mockClient,
+          ),
         );
 
       await runner.run(['validate-skill', configFile.path]);
@@ -320,6 +335,7 @@ void main() {
         runner = CommandRunner('skills', 'Test runner')
           ..addCommand(
             ValidateSkillCommand(
+              environment: {'GEMINI_API_KEY': 'test-key'},
               outputDir: skillsDir,
               validationDir: validationDir,
               httpClient: mockClient,
@@ -369,6 +385,7 @@ void main() {
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             validationDir: validationDir,
             httpClient: mockClient,
@@ -416,6 +433,7 @@ void main() {
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             validationDir: validationDir,
             httpClient: mockClient,
@@ -495,6 +513,7 @@ Content
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             httpClient: mockClient,
             validationDir: validationDir,
@@ -534,7 +553,11 @@ Content
 
         runner = CommandRunner('skills', 'Test runner')
           ..addCommand(
-            ValidateSkillCommand(outputDir: skillsDir, httpClient: mockClient),
+            ValidateSkillCommand(
+              environment: {'GEMINI_API_KEY': 'test-key'},
+              outputDir: skillsDir,
+              httpClient: mockClient,
+            ),
           );
 
         await runner.run(['validate-skill', configFile.path]);
@@ -570,7 +593,11 @@ Content
 
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
-          ValidateSkillCommand(outputDir: skillsDir, httpClient: mockClient),
+          ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
+            outputDir: skillsDir,
+            httpClient: mockClient,
+          ),
         );
 
       await runner.run(['validate-skill', configFile.path]);
@@ -627,6 +654,7 @@ Content
       runner = CommandRunner('skills', 'Test runner')
         ..addCommand(
           ValidateSkillCommand(
+            environment: {'GEMINI_API_KEY': 'test-key'},
             outputDir: skillsDir,
             validationDir: validationDir,
             httpClient: mockClient,

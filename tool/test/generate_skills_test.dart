@@ -83,6 +83,7 @@ void main() {
       });
 
       final command = GenerateSkillCommand(
+        environment: {'GEMINI_API_KEY': 'test-key'},
         httpClient: mockClient,
         outputDir: tempDir,
       );
@@ -158,6 +159,7 @@ void main() {
       });
 
       final command = GenerateSkillCommand(
+        environment: {'GEMINI_API_KEY': 'test-key'},
         httpClient: mockClient,
         outputDir: tempDir,
       );
@@ -225,6 +227,7 @@ void main() {
       });
 
       final command = GenerateSkillCommand(
+        environment: {'GEMINI_API_KEY': 'test-key'},
         httpClient: mockClient,
         outputDir: skillsDir,
       );
@@ -302,6 +305,7 @@ void main() {
       });
 
       final command = GenerateSkillCommand(
+        environment: {'GEMINI_API_KEY': 'test-key'},
         httpClient: mockClient,
         outputDir: skillsDir,
       );
@@ -347,6 +351,7 @@ void main() {
         });
 
         final command = GenerateSkillCommand(
+          environment: {'GEMINI_API_KEY': 'test-key'},
           httpClient: mockClient,
           outputDir: tempDir,
         );
@@ -401,6 +406,7 @@ void main() {
       });
 
       final command = GenerateSkillCommand(
+        environment: {'GEMINI_API_KEY': 'test-key'},
         httpClient: mockClient,
         outputDir: tempDir,
       );
@@ -432,6 +438,7 @@ void main() {
       });
 
       final command = GenerateSkillCommand(
+        environment: {'GEMINI_API_KEY': 'test-key'},
         httpClient: mockClient,
         outputDir: tempDir,
       );
