@@ -350,3 +350,56 @@
     - https://docs.flutter.dev/cookbook/design/themes
     - https://docs.flutter.dev/ui/adaptive-responsive/idioms
     - https://docs.flutter.dev/ui
+- name: flutter-routing-and-navigation
+  description: Move between or deep link to different screens or "routes" within an application
+  instructions: |
+    Routing and navigation involve moving between different screens or "routes"
+    within an application. In Flutter, screens and pages are referred to as
+    routes. This concept is similar to an Activity in Android or a
+    ViewController in iOS, but in Flutter, a route is simply a widget.
+    
+    A key aspect of navigation is deep linking, which allows an app to open
+    directly to a specific location or "deep" inside the app when a URL is
+    received. For example, a deep link from an advertisement could open a
+    shopping app to a specific product page. Flutter supports deep linking on
+    iOS, Android, and the web. When running an app in a web browser, no
+    additional setup is required for deep linking. While named routes can be
+    used for deep linking, they are generally not recommended for most
+    applications. The `Router` widget can also be used for deep linking.
+    
+    Common navigation tasks include navigating to a new screen and returning to
+    the previous one. This can be achieved using `Navigator.push()` to go to a
+    new route and `Navigator.pop()` to return to the previous route. Other
+    navigation functionalities include adding tabs to an app, sending data to a
+    new screen, returning data from a screen, and adding a drawer to a screen.
+    It's also possible to create nested navigation flows.
+    
+    For more in-depth information on navigation and routing, resources like the
+    Flutter cookbook offer multiple navigation recipes that demonstrate how to
+    use the `Navigator`. The `Navigator` and `Router` API documentation provide
+    details on setting up declarative navigation without needing a routing
+    package. Additionally, the Material Design documentation offers insights
+    into designing app navigation, covering concepts like forward, upward, and
+    chronological navigation. An article on Medium describes how to use the
+    `Router` widget directly. The `Router` design document explains the
+    motivation and design of the `Router` API. A sample demonstrating how to use
+    `go_router` API for common navigation scenarios is also available.
+  resources:
+    - https://docs.flutter.dev/ui/navigation
+    - https://docs.flutter.dev/cookbook/navigation/navigation-basics
+    - https://docs.flutter.dev/cookbook/navigation/named-routes
+    - https://docs.flutter.dev/cookbook/effects/nested-nav
+    - https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments
+    - https://docs.flutter.dev/ui/navigation/deep-linking
+    - https://docs.flutter.dev/learn/tutorial/navigation
+    - https://docs.flutter.dev/learn/pathway/tutorial/navigation
+    - https://docs.flutter.dev/cookbook/navigation
+    - https://docs.flutter.dev/cookbook/navigation/passing-data
+    - https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments
+    - https://docs.flutter.dev/ui/navigation
+    - https://docs.flutter.dev/learn/pathway/tutorial/navigation
+    - https://docs.flutter.dev/cookbook/effects/nested-nav
+    - https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments
+    - https://docs.flutter.dev/cookbook/navigation/named-routes
+    - https://docs.flutter.dev/cookbook/navigation/passing-data
+    - https://docs.flutter.dev/resources/glossary/index.html.md
