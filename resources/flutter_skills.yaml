@@ -403,3 +403,84 @@
     - https://docs.flutter.dev/cookbook/navigation/named-routes
     - https://docs.flutter.dev/cookbook/navigation/passing-data
     - https://docs.flutter.dev/resources/glossary/index.html.md
+- name: flutter-animation
+  description: Add animated effects to your app
+  instructions: |
+    Animation is a broad topic that encompasses various types and patterns,
+    often implemented using a system based on typed `Animation` objects.
+
+    Generally, animations are categorized as either tween-based or
+    physics-based. In a tween animation, the beginning and ending points, a
+    timeline, and a curve defining timing and speed are all defined, and the
+    framework calculates the transition. Physics-based animation, on the other
+    hand, models motion to resemble real-world behavior, such as how a tossed or
+    dropped ball would move.
+
+    Common animation patterns include animated lists or grids, shared element
+    transitions, and staggered animations. An animated list or grid involves
+    animating the addition or removal of elements. Shared element transitions,
+    also known as hero animations, occur when a user selects an element, and the
+    UI animates that element to a new page with more detail. Hero animations can
+    involve the element flying between routes while changing position and size,
+    or its shape transforming, for example, from circular to rectangular.
+    Staggered animations are broken into smaller motions, with some of the
+    motion delayed.
+
+    The animation system in Flutter is built upon typed `Animation` objects.
+    Widgets can either directly incorporate these animations by reading their
+    current value and listening to state changes, or they can use them as a
+    basis for more elaborate animations passed to other widgets. An `Animation`
+    object is an abstract class that understands its current value and state
+    (completed or dismissed). It knows nothing about what is onscreen,
+    rendering, or `build()` functions. A common type is `Animation<double>`,
+    which sequentially generates interpolated numbers between two values over a
+    duration, with output that can be linear, curved, or a step function.
+    Animations can also interpolate other types like `Animation<Color>` or
+    `Animation<Size>`. The current value of an `Animation` object is always
+    available in its `.value` member. When an animation's value changes, it
+    notifies all listeners added with `addListener`.
+
+    `Tween<T>` is an abstract class that maps a double value, typically in the
+    range 0.0-1.0, to a typed value such as a `Color` or another double. Tweens
+    are stateless and immutable, having a notion of an output type, a beginning
+    and end value, and a way to interpolate between them. The `Curve` abstract
+    class maps doubles, also nominally in the range 0.0-1.0, to other doubles in
+    the same range, and `Curve` classes are also stateless and immutable.
+
+    Flutter offers implicit animations as a simple way to implement animations.
+    Implicit animations are a group of widgets that automatically animate
+    changes to their properties without requiring manual management of
+    intermediate behavior. An example of a versatile implicit animation widget
+    is `AnimatedContainer`.
+  resources:
+    - https://docs.flutter.dev/ui/animations
+    - https://docs.flutter.dev/ui/animations/overview
+    - https://docs.flutter.dev/ui/animations/tutorial
+    - https://docs.flutter.dev/learn/pathway/tutorial/implicit-animations
+    - https://docs.flutter.dev/learn/tutorial/implicit-animations
+    - https://docs.flutter.dev/ui/widgets/animation
+    - https://docs.flutter.dev/ui/animations/staggered-animations
+    - https://docs.flutter.dev/cookbook/animation/page-route-animation
+    - https://docs.flutter.dev/cookbook/animation/animated-container
+    - https://docs.flutter.dev/ui/animations/hero-animations
+    - https://docs.flutter.dev/ui/animations
+    - https://docs.flutter.dev/ui/animations/overview
+    - https://docs.flutter.dev/ui/animations/tutorial
+    - https://docs.flutter.dev/learn/pathway/tutorial/implicit-animations
+    - https://docs.flutter.dev/learn/tutorial/implicit-animations
+    - https://docs.flutter.dev/ui/animations/staggered-animations
+    - https://docs.flutter.dev/cookbook/animation/animated-container
+    - https://docs.flutter.dev/cookbook/animation/page-route-animation
+    - https://docs.flutter.dev/ui/animations/hero-animations
+    - https://docs.flutter.dev/cookbook/animation/physics-simulation
+    - https://docs.flutter.dev/ui/animations
+    - https://docs.flutter.dev/ui/animations/overview
+    - https://docs.flutter.dev/ui/animations/tutorial
+    - https://docs.flutter.dev/learn/pathway/tutorial/implicit-animations
+    - https://docs.flutter.dev/learn/tutorial/implicit-animations
+    - https://docs.flutter.dev/ui/animations/staggered-animations
+    - https://docs.flutter.dev/cookbook/animation/animated-container
+    - https://docs.flutter.dev/cookbook/animation/page-route-animation
+    - https://docs.flutter.dev/cookbook/animation/animated-container
+    - https://docs.flutter.dev/ui/widgets/animation
+    - https://docs.flutter.dev/cookbook/animation/page-route-animation
