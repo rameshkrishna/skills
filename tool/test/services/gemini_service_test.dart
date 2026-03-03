@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:http/http.dart' as http;
@@ -192,111 +191,6 @@ Some content
 ''';
         expect(service.cleanContent(content), expected);
       });
-    });
-  });
-
-  group('GeminiService URL Validation', () {
-    late GeminiService service;
-
-    setUp(() {
-      Logger.root.level = Level.ALL;
-    });
-
-    test('retries when content contains URLs', () async {
-      var attempt = 0;
-
-      final client = MockClient((request) async {
-        attempt++;
-        if (attempt == 1) {
-          return http.Response(
-            jsonEncode({
-              'candidates': [
-                {
-                  'content': {
-                    'parts': [
-                      {'text': 'Here is a link: https://example.com'},
-                    ],
-                  },
-                },
-              ],
-            }),
-            200,
-          );
-        } else {
-          return http.Response(
-            jsonEncode({
-              'candidates': [
-                {
-                  'content': {
-                    'parts': [
-                      {'text': 'No links here.'},
-                    ],
-                  },
-                },
-              ],
-            }),
-            200,
-          );
-        }
-      });
-
-      service = GeminiService(
-        apiKey: 'key',
-        httpClient: client,
-        model: 'gemini-3-pro',
-      );
-
-      final result = await service.generateSkillContent(
-        'markdown',
-        'name',
-        'desc',
-      );
-
-      expect(attempt, 2);
-      expect(result, contains('No links here.'));
-      expect(result, isNot(contains('https://example.com')));
-    });
-
-    test('fails after retries if content always contains URLs', () async {
-      final client = MockClient((request) async {
-        return http.Response(
-          jsonEncode({
-            'candidates': [
-              {
-                'content': {
-                  'parts': [
-                    {'text': 'Link: https://example.com'},
-                  ],
-                },
-              },
-            ],
-          }),
-          200,
-        );
-      });
-
-      service = GeminiService(
-        apiKey: 'key',
-        httpClient: client,
-        model: 'gemini-3-pro',
-      );
-
-      // Capture logs to verify retries
-      final logs = <String>[];
-      final subscription = Logger.root.onRecord.listen(
-        (r) => logs.add(r.message),
-      );
-      addTearDown(subscription.cancel);
-
-      final result = await service.generateSkillContent(
-        'markdown',
-        'name',
-        'desc',
-      );
-
-      expect(result, isNull);
-      expect(logs, contains(contains('Retrying Gemini generation')));
-      expect(logs, contains(contains('Gemini generation failed')));
     });
   });
 

@@ -97,15 +97,6 @@ class GeminiService {
           throw const FormatException('Empty response from Gemini');
         }
 
-        // Check for URLs in the content
-        // This regex matches http://, https://, or www.
-        final urlPattern = RegExp(r'(https?:\/\/[^\s]+)|(www\.[^\s]+)');
-        if (urlPattern.hasMatch(text)) {
-          throw const FormatException(
-            'Generated content contains URLs, which is not allowed.',
-          );
-        }
-
         return text;
       }, onRetry: (e) => _logger.warning('Retrying Gemini generation: $e'));
 
@@ -188,15 +179,6 @@ On the very last line, output "Grade: [0-100]" representing overall quality of t
           throw const FormatException('Empty response from Gemini');
         }
 
-        // Check for URLs in the content
-        // This regex matches http://, https://, or www.
-        final urlPattern = RegExp(r'(https?:\/\/[^\s]+)|(www\.[^\s]+)');
-        if (urlPattern.hasMatch(text)) {
-          throw const FormatException(
-            'Generated content contains URLs, which is not allowed.',
-          );
-        }
-
         return text;
       }, onRetry: (e) => _logger.warning('Retrying Gemini validation: $e'));
 
@@ -252,8 +234,7 @@ DO NOT include any YAML frontmatter. Start immediately with the markdown content
 2. **Decision Trees**: If the content describes a process with multiple choices or steps, YOU MUST create a "Decision Logic" or "Flowchart" section to guide the agent.
 3. **Clarity**: Use clear headings, bullet points, and code blocks.
 4. **Format**: Do NOT wrap the entire output in a markdown code block (like ```markdown ... ```). Return raw markdown text.
-5. **No URLs**: The content must NOT include any URLs or links. External references should be described in text only.
-${instructions != null && instructions.isNotEmpty ? '6. **Special Instructions**: $instructions' : ''}
+${instructions != null && instructions.isNotEmpty ? '5. **Special Instructions**: $instructions' : ''}
 
 Raw Content:
 $markdown
