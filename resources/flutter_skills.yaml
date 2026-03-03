@@ -484,3 +484,72 @@
     - https://docs.flutter.dev/cookbook/animation/animated-container
     - https://docs.flutter.dev/ui/widgets/animation
     - https://docs.flutter.dev/cookbook/animation/page-route-animation
+- name: flutter-localization
+  description: Configure your app to support different languages and regions
+  instructions: |
+   Localization in Flutter involves adapting an app to different languages and
+   regions. By default, Flutter only supports US English for its strings. To add
+   support for other languages, you need to include the `flutter_localizations`
+   package. You might also need Dart's `intl` package for internationalization
+   (i10n) features like date/time formatting.
+   
+   When a `WidgetsApp` or `MaterialApp` is initialized, it creates a
+   `Localizations` widget with specified delegates. The device's current locale
+   is always accessible from the `Localizations` widget via a `Locale` object or
+   `Window.locale`. To access localized resources, you use the
+   `Localizations.of()` method to get a specific localizations class provided by
+   a delegate. The `intl_translation` package can be used to extract
+   translatable copy into `.arb` files for translation and then import them back
+   into the app for use with `intl`.
+   
+   To set up an internationalized app, you add `flutter_localizations` and
+   `intl` as dependencies in your `pubspec.yaml` file. Then, you import the
+   `flutter_localizations` library and specify `localizationsDelegates` and
+   `supportedLocales` for your `MaterialApp` or `CupertinoApp`. For example, you
+   would include `GlobalMaterialLocalizations.delegate`,
+   `GlobalWidgetsLocalizations.delegate`, and
+   `GlobalCupertinoLocalizations.delegate` in `localizationsDelegates`. You also
+   define the `supportedLocales`, such as `Locale('en')` for English and
+   `Locale('es')` for Spanish. After this setup, Material and Cupertino packages
+   should be correctly localized, and widgets should adapt to localized messages
+   and layout (e.g., left-to-right or right-to-left).
+   
+   The `Localizations` widget is crucial for loading and looking up objects
+   containing collections of localized values. Apps refer to these objects using
+   `Localizations.of(context, type)`. If the device's locale changes, the
+   `Localizations` widget automatically loads values for the new locale and
+   rebuilds dependent widgets. This behavior is similar to an `InheritedWidget`.
+   The `WidgetsApp` widget creates a `Localizations` widget and rebuilds it if
+   the system's locale changes. You can always find an app's current locale
+   using `Localizations.localeOf(context)`.
+   
+   Some widgets, like `TextField`, require a `MaterialLocalizations` widget in
+   the widget tree. If `MaterialLocalizations` is not present, `TextField` will
+   throw an assertion error. You can introduce `MaterialLocalizations` by using
+   a `MaterialApp` at the root of your application, which includes them
+   automatically, or by adding a `Localization` widget with a
+   `MaterialLocalizations` delegate.
+   
+   For iOS, even though Flutter handles localizations, you need to add the
+   supported languages in the Xcode project. This ensures that your app's entry
+   in the App Store correctly displays the supported languages. You can
+   configure supported locales by opening your project's `ios/Runner.xcodeproj`
+   file in Xcode, selecting the `Runner` project file, and then the `Info` tab.
+   In the `Localizations` section, you click the Add button to add supported
+   languages and regions. Xcode will then create empty `.strings` files and
+   update the `ios/Runner.xcodeproj/project.pbxproj` file, which the App Store
+   uses to determine supported languages.
+   
+   Advanced locale definition might be necessary for languages with multiple
+   variants, such as Chinese, which requires specifying language code, script
+   code, and country code to differentiate between simplified and traditional
+   script, and regional differences. Similarly, other languages like French
+   (fr_FR, fr_CA) should be fully differentiated for nuanced localization. The
+   `Locale` class identifies the user's language, and internationalized apps
+   respond by displaying locale-specific values.
+  resources:
+    - https://docs.flutter.dev/release/breaking-changes/cupertino-tab-bar-localizations
+    - https://docs.flutter.dev/ui/internationalization
+    - https://docs.flutter.dev/release/breaking-changes/flutter-generate-i10n-source
+    - https://docs.flutter.dev/release/breaking-changes/material-localized-strings
+    - https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations
