@@ -25,6 +25,32 @@ $markdown
 ''';
   }
 
+  /// Creates the prompt for updating an existing skill.
+  static String updateSkillPrompt(
+    String existingContent,
+    String markdown,
+    String? instructions,
+  ) {
+    return '''
+Update the following existing "SKILL.md" file using the provided new technical documentation.
+
+DO NOT include any YAML frontmatter. Start immediately with the markdown content (e.g. headers).
+
+**Guidelines:**
+1. **Preserve Useful Content**: Carefully integrate the new information without losing valuable existing instructions, examples, or context from the Existing SKILL.md Content.
+2. **Ignore Noise**: Exclude navigation bars, footers, "Edit this page" links, and other non-technical content from the new documentation.
+3. **Decision Trees**: If the new content describes a process with multiple choices or steps, ensure the "Decision Logic" or "Flowchart" section is updated or created.
+4. **Clarity & Format**: Use clear headings, bullet points, and code blocks. Do NOT wrap the entire output in a markdown code block (like ```markdown ... ```). Return raw markdown text.
+${instructions != null && instructions.isNotEmpty ? '5. **Special Instructions**: $instructions' : ''}
+
+Existing SKILL.md Content:
+$existingContent
+
+New Technical Documentation (Raw Content):
+$markdown
+''';
+  }
+
   /// Creates the prompt for validating an existing skill.
   static String validateExistingSkillContentPrompt(
     String markdown,

@@ -116,7 +116,68 @@ class GeminiService {
     }
   }
 
-  /// Validate Existing Skill
+  /// Updates the content for a skill based on raw markdown input and existing content.
+  Future<String?> updateSkillContent(
+    String existingContent,
+    String rawMarkdown,
+    String skillName,
+    String description, {
+    String? instructions,
+    int thinkingBudget = defaultThinkingBudget,
+  }) async {
+    final service = GenerativeService(client: _client);
+    final lastModified = io.HttpDate.format(DateTime.now());
+    final prompt = Prompts.updateSkillPrompt(
+      existingContent,
+      rawMarkdown,
+      instructions,
+    );
+
+    final request = _createRequest(
+      prompt,
+      systemInstruction: skillInstructions,
+      thinkingBudget: thinkingBudget,
+    );
+
+    _logger.info(
+      '  Model: $_model, Max Output Tokens: $defaultMaxOutputTokens, Thinking Budget: $thinkingBudget',
+    );
+
+    try {
+      const r = RetryOptions(maxAttempts: 3);
+      final response = await r.retry(() async {
+        final res = await service.generateContent(request);
+        final text = res.candidates.first.content?.parts
+            .where((part) => !part.thought)
+            .map((part) => part.text)
+            .where((text) => text != null)
+            .join('\n');
+
+        if (text == null || text.isEmpty) {
+          throw const FormatException('Empty response from Gemini');
+        }
+
+        return text;
+      }, onRetry: (e) => _logger.warning('Retrying Gemini generation: $e'));
+
+      final content = response;
+
+      final frontMatterMap = {
+        'name': skillName,
+        'description': description,
+        'metadata': {'model': _model, 'last_modified': lastModified},
+      };
+
+      final frontmatter = '---\n${YamlWriter().write(frontMatterMap)}\n---\n';
+
+      return frontmatter + (cleanContent(content) ?? '');
+    } on Object catch (e) {
+      _logger.severe('Gemini update failed: $e');
+      return null;
+    }
+  }
+
+  /// Validates an existing skill
   Future<String?> validateExistingSkillContent(
     String markdown,
     String skillName,
