@@ -977,3 +977,92 @@
     - https://docs.flutter.dev/release/breaking-changes/image-cache-and-provider
     - https://docs.flutter.dev/release/breaking-changes/imagecache-large-images
     - https://docs.flutter.dev/release/breaking-changes/scroll-cache-extent
+- name: flutter-platform-views
+  description: Add a native view into your app
+  instructions: |
+    Platform Views allow you to embed native views into a Flutter application.
+    This functionality enables the application of transforms, clips, and opacity
+    to the native view directly from Dart. For example, you can integrate native
+    Google Maps from the Android SDK or iOS SDK directly into your Flutter app.
+    Similarly, native web views can be used directly inside a Flutter app on
+    macOS.
+
+    Platform Views are available for Android, iOS, and macOS. For Android,
+    Platform Views require API 23+. On Android, there are two implementations
+    for Platform Views: Hybrid Composition and Texture Layer (or Texture Layer
+    Hybrid Composition). Hybrid Composition renders Platform Views normally,
+    with Flutter content rendered into a texture, and SurfaceFlinger composing
+    both. This offers the best performance and fidelity for Android views but
+    can cause Flutter performance to suffer, lower application FPS, and prevent
+    certain transformations on Flutter widgets from working with platform views.
+    Texture Layer renders Platform Views into a texture, with Flutter drawing
+    them via the texture and Flutter content rendered directly into a Surface.
+    This provides good performance for Android Views and best performance for
+    Flutter rendering, with all transformations working correctly. However,
+    quick scrolling (e.g., in a web view) can be janky, SurfaceViews are
+    problematic and moved into a virtual display (breaking accessibility), and
+    text magnifiers will break unless Flutter is rendered into a TextureView.
+    Prior to Android 10, hybrid composition copied each Flutter frame out of
+    graphics memory into main memory and then back to a GPU texture, impacting
+    overall Flutter UI performance; in Android 10 and above, this copy happens
+    only once.
+      
+    On iOS, only Hybrid Composition is used, where the native `UIView` is
+    appended to the view hierarchy. Platform views in Flutter come with
+    performance trade-offs. Techniques to mitigate performance issues for
+    complex cases include using a placeholder texture during animations in Dart,
+    such as rendering a screenshot of the native view as a texture if an
+    animation is slow while a platform view is rendered. There are also
+    composition limitations for iOS Platform Views, where `ShaderMask` and
+    `ColorFiltered` widgets are not supported, and `BackdropFilter` has
+    limitations. For macOS, platform view support is not fully functional as of
+    the current release, with gesture support not yet available.
+      
+    To create a platform view on Android, you need to create a Widget on the
+    Dart side and add a build implementation. This involves importing necessary
+    Flutter packages and implementing a `build()` method that specifies a
+    `viewType` and can pass parameters to the platform side. Handling
+    `SurfaceViews` is problematic for Flutter and should be avoided when
+    possible. Certain Android Views, like `SurfaceView` and `SurfaceTexture`, do
+    not invalidate themselves when their content changes, requiring manual
+    invalidation by calling `invalidate` on the View or a parent view.
+    
+    Flutter can be added to existing web applications, including those using
+    HTML DOM-based frameworks (Dart or JS), server-side rendered frameworks, or
+    even "VanillaJS". The minimum requirement is that the existing application
+    supports importing JavaScript libraries and creating HTML elements for
+    Flutter to render into. After building Flutter normally, embedding
+    instructions are followed to place Flutter views on the page. Multi-view
+    mode is not supported for mobile limitations but can be enabled for web
+    applications by setting `multiViewEnabled: true` in the `initializeEngine`
+    method. Flutter views can be managed from JavaScript using an `app` object
+    returned by `runApp`, allowing for adding and removing views. View additions
+    and removals are surfaced to Flutter through the `didChangeMetrics` method
+    of the `WidgetsBinding` class, and the complete list of views is available
+    via `WidgetsBinding.instance.platformDispatcher.views`. To render content
+    into each `FlutterView`, the Flutter app needs to create a `View` widget,
+    which can be grouped under a `ViewCollection` widget.
+  resources:
+    - https://docs.flutter.dev/add-to-app
+    - https://docs.flutter.dev/add-to-app/android/add-flutter-view
+    - https://docs.flutter.dev/add-to-app/multiple-flutters
+    - https://docs.flutter.dev/flutter-for/android-devs
+    - https://docs.flutter.dev/get-started/flutter-for/android-devs
+    - https://docs.flutter.dev/get-started/flutter-for/swiftui-devs
+    - https://docs.flutter.dev/platform-integration
+    - https://docs.flutter.dev/platform-integration/android/platform-views
+    - https://docs.flutter.dev/platform-integration/android/platform-views?tab=android-platform-views-java-tab
+    - https://docs.flutter.dev/platform-integration/ios/platform-views
+    - https://docs.flutter.dev/platform-integration/macos/platform-views
+    - https://docs.flutter.dev/platform-integration/platform-channels
+    - https://docs.flutter.dev/platform-integration/web/embedding-flutter-web
+    - https://docs.flutter.dev/release/breaking-changes/platform-views-using-html-slots-web
+    - https://docs.flutter.dev/resources/architectural-overview
+    - https://docs.flutter.dev/resources/faq
+- name: flutter-native-interop
+  description: Interoperate with native APIs
+  instructions: |
+    todo
+  resources:
+    - https://docs.flutter.dev/add-to-app/android/add-flutter-fragment/index.html.md
+    - https://docs.flutter.dev/add-to-app/android/add-flutter-screen
