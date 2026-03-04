@@ -1297,3 +1297,89 @@
     - https://docs.flutter.dev/testing/integration-tests
     - https://docs.flutter.dev/testing/overview
     - https://docs.flutter.dev/testing/testing-plugins
+- name: flutter-performance
+  description: Add unit tests, widget tests, or integration tests
+  instructions: |
+    Performance optimization involves evaluating an app's performance from
+    various angles, including speed and app size. The goal is to answer
+    questions about what performance is, why it's important, and how to improve
+    it. To improve performance, measurable metrics are needed to verify problems
+    and improvements. These metrics should be easily reproducible, and when
+    there's noise, the full distribution should be shown or noise eliminated by
+    aggregating many measurements. It should be easy to compare performance, for
+    example, by providing a timeline to compare current and old versions. Tools
+    and ways to convert one metric to another are also helpful, such as
+    converting memory increase and FPS drops into revenue lost or users dropped
+    to make informed trade-offs. Performance metrics should monitor as wide a
+    population as possible.
+
+    Flutter applications are generally performant by default, so avoiding common
+    pitfalls can lead to excellent performance. Performance issues can be
+    categorized into speed, memory, app size, and energy. This document serves
+    as a root node for resources addressing performance questions.
+
+    Key best practices for performance optimization include minimizing expensive
+    operations, controlling `build()` costs, and using `StringBuffer` for
+    efficient string building. Expensive operations consume more resources and
+    should only be used when necessary. The design and implementation of an
+    app's UI significantly impact its efficiency. When designing the UI, avoid
+    repetitive and costly work in `build()` methods, as they can be invoked
+    frequently when ancestor widgets rebuild. Also, avoid overly large single
+    widgets with large `build()` functions.
+
+    To control `build()` costs, split widgets based on encapsulation and how
+    they change. When `setState()` is called on a `State` object, all descendant
+    widgets rebuild. Therefore, localize `setState()` calls to the part of the
+    subtree whose UI actually needs to change, avoiding calls high up in the
+    tree if the change is contained to a small part. The rebuild traversal stops
+    when the same instance of a child widget from the previous frame is
+    re-encountered. Using `const` constructors on widgets as much as possible
+    allows Flutter to short-circuit most rebuild work. Enabling recommended
+    lints from the `flutter_lints` package can automatically remind developers
+    to use `const`. For reusable UI pieces, prefer `StatelessWidget` over
+    functions.
+
+    Other best practices include using `saveLayer()` thoughtfully, minimizing
+    the use of opacity and clipping, and implementing grids and lists
+    thoughtfully. It's also important to minimize layout passes caused by
+    intrinsic operations and to build and display frames within 16ms.
+
+    Flutter provides several tools for performance analysis. The Performance
+    View, part of Flutter DevTools, helps debug performance issues. It includes
+    a Flutter frames chart, frame analysis tab, timeline events trace viewer,
+    and advanced debugging tools. The CPU profiler view in DevTools allows
+    recording and profiling sessions for Dart and Flutter applications to
+    understand CPU activity. The Performance Overlay displays simplified metrics
+    directly within a running app. For web apps, Chrome DevTools can be used to
+    debug performance issues, with Flutter emitting timeline events that are
+    exposed in the Chrome DevTools performance panel. Profiling Flutter web apps
+    requires Flutter version 3.14 or later. Optional flags like
+    `debugProfileBuildsEnabled` and `debugProfileBuildsEnabledUserWidgets` can
+    enhance tracing by adding timeline events for widget builds.
+
+    When analyzing performance, it's crucial to use a profile build of the
+    application, as frame rendering times in debug mode are not indicative of
+    release performance. Running in profile mode still preserves useful
+    debugging information. Flutter aims to render its UI at 60 frames per second
+    (fps), or 120 fps on devices capable of 120Hz updates. Each render is called
+    a frame, meaning the UI updates approximately every 16ms. A frame taking
+    longer than 16ms to render causes "jank" or jerky motion.
+
+    Specific costly performance operations to be careful with include `Opacity`,
+    `Clip.antiAliasWithSaveLayer`, or anything that triggers `saveLayer`, and
+    `ImageFilter`. Rebuild optimization for `OverlayEntries` and `Routes` has
+    improved performance for route transitions by removing unnecessary rebuilds.
+  resources:
+    - https://docs.flutter.dev/cookbook/testing/integration/profiling
+    - https://docs.flutter.dev/perf
+    - https://docs.flutter.dev/perf/appendix
+    - https://docs.flutter.dev/perf/best-practices
+    - https://docs.flutter.dev/perf/faq
+    - https://docs.flutter.dev/perf/metrics
+    - https://docs.flutter.dev/perf/rendering-performance
+    - https://docs.flutter.dev/perf/ui-performance
+    - https://docs.flutter.dev/perf/web-performance
+    - https://docs.flutter.dev/release/breaking-changes/layout-builder-optimization
+    - https://docs.flutter.dev/release/breaking-changes/overlay-entry-rebuilds
+    - https://docs.flutter.dev/tools/devtools/cpu-profiler
+    - https://docs.flutter.dev/tools/devtools/performance
