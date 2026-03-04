@@ -1060,9 +1060,78 @@
     - https://docs.flutter.dev/resources/architectural-overview
     - https://docs.flutter.dev/resources/faq
 - name: flutter-native-interop
-  description: Interoperate with native APIs
+  description: Interoperate with native APIs on Android, iOS, and the web
   instructions: |
-    todo
+    Native interop on Android, iOS, and Web involves several methods for
+    integrating Flutter applications with platform-specific code and features.
+    
+    For Android, Flutter allows binding to native C code using the `dart:ffi`
+    library. This library, which stands for foreign function interface, enables
+    Flutter mobile and desktop apps to call native C APIs. While a legacy
+    approach to C interop on Android is documented, a `package_ffi` template
+    with build hooks is now recommended for C interop since Flutter 3.38.
+    However, the legacy `plugin_ffi` template remains useful for accessing the
+    Flutter Plugin API or configuring a Google Play services runtime. Flutter
+    also supports writing custom platform-specific code for Android using Kotlin
+    or Java. Messages can be passed between the Flutter UI and the Android
+    platform using platform channels, with `MethodChannel` for Android receiving
+    method calls and sending back results. Android developers can leverage their
+    existing knowledge when building Flutter apps, as Flutter relies on the
+    mobile operating system for various capabilities.
+    
+    On iOS, Flutter supports binding to native C, Objective-C, and Swift code.
+    Similar to Android, the `dart:ffi` library can be used to call native C
+    APIs. For C interop on iOS, a `package_ffi` template with build hooks is
+    recommended since Flutter 3.38, though the `plugin_ffi` template is still
+    useful for accessing the Flutter Plugin API or using static linking. When
+    binding to native macOS code, which shares similarities with iOS, the FFI
+    library can only bind against C symbols, requiring C++ symbols to be marked
+    `extern "C"`. Attributes like `__attribute__((visibility("default")))
+    __attribute__((used))` should be added to prevent the linker from discarding
+    symbols during link-time optimization. Dynamically linked libraries are
+    automatically loaded when the app starts, and their symbols can be resolved
+    using `DynamicLibrary.process`. Flutter also supports writing custom
+    platform-specific code for iOS using Swift or Objective-C. Platform channels
+    are used to pass messages asynchronously between the Flutter UI and the iOS
+    platform, with `FlutterMethodChannel` for iOS handling method calls. Flutter
+    also supports new and upcoming iOS features and allows embedding native
+    macOS views.
+    
+    For the web, Flutter offers several integration options. This includes
+    adding custom integrations with the web platform, customizing app
+    initialization, embedding native web content, and embedding a Flutter app
+    within another web app. Flutter can compile to WebAssembly (Wasm) to take
+    advantage of its benefits. However, Flutter compiled to Wasm currently
+    cannot run on the iOS version of any browser due to WebKit requirements and
+    compatibility issues. Interoperability with JavaScript is also supported,
+    allowing integration from Dart code. For web-specific code, JS
+    interoperability is generally used instead of platform channels. Dart has
+    introduced new, lightweight interop solutions built around static JS
+    interop, such as `package:web` (replacing `dart:html`) and `dart:js_interop`
+    (replacing `package:js` and `dart:js`), to support compilation to Wasm.
+    
+    Across all platforms, Flutter allows writing custom platform-specific code
+    using platform channels. The Pigeon package can be used to generate
+    type-safe platform-specific code. Messages are passed asynchronously between
+    the client (UI) and host (platform) to ensure a responsive user interface.
+    Flutter also supports adding Flutter to an existing app on Android, iOS, and
+    web. This "add-to-app" feature supports multi-engine on Android and iOS,
+    allowing multiple isolated Flutter instances, and multi-view on the web,
+    where multiple `FlutterViews` can share objects within a single Dart
+    program. Common use cases for add-to-app include hybrid navigation stacks
+    and partial-screen views.
+
   resources:
-    - https://docs.flutter.dev/add-to-app/android/add-flutter-fragment/index.html.md
-    - https://docs.flutter.dev/add-to-app/android/add-flutter-screen
+    - https://docs.flutter.dev/platform-integration
+    - https://docs.flutter.dev/platform-integration/android/c-interop
+    - https://docs.flutter.dev/platform-integration/android/call-jetpack-apis
+    - https://docs.flutter.dev/platform-integration/android/platform-views
+    - https://docs.flutter.dev/platform-integration/bind-native-code
+    - https://docs.flutter.dev/platform-integration/ios
+    - https://docs.flutter.dev/platform-integration/ios/c-interop
+    - https://docs.flutter.dev/platform-integration/ios/platform-views
+    - https://docs.flutter.dev/platform-integration/macos/c-interop
+    - https://docs.flutter.dev/platform-integration/platform-channels
+    - https://docs.flutter.dev/platform-integration/web/wasm
+    - https://docs.flutter.dev/platform-integration/web/web-content-in-flutter
+    - https://docs.flutter.dev/resources/faq
