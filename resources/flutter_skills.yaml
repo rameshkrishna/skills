@@ -1383,3 +1383,72 @@
     - https://docs.flutter.dev/release/breaking-changes/overlay-entry-rebuilds
     - https://docs.flutter.dev/tools/devtools/cpu-profiler
     - https://docs.flutter.dev/tools/devtools/performance
+- name: flutter-app-size
+  description: Measure and reduce the size of the app bundle, APK, or IPA
+  instructions: |
+    To effectively reduce app size, an agent needs to understand how to measure
+    app size, analyze its components, and implement specific reduction
+    strategies.
+
+    **Measuring and Analyzing App Size:**
+    The size of a compiled app, whether an APK, app bundle, or IPA, is a
+    significant concern because larger apps require more device space, take
+    longer to download, and can exceed limits for features like Android instant
+    apps. Debug builds are not representative of the final app size. To measure
+    app size, the `--analyze-size` flag can be used with `flutter build`
+    commands for various platforms like `apk`, `appbundle`, `ios`, `linux`,
+    `macos`, and `windows`. This build process compiles Dart in a way that
+    records code size usage of Dart packages and provides a high-level summary
+    in the terminal. It also generates a `*-code-size-analysis_*.json` file for
+    more detailed analysis in DevTools.
+
+    For iOS, a `.app` file is created, which is useful for evaluating the
+    relative size of its content, but for a closer estimate of download size,
+    the "Estimating total size" section should be referenced. An upload package
+    is not always representative of end-users' download size, as redundant
+    native library architectures and asset densities can be filtered by app
+    stores. End users' download sizes can also vary based on their hardware.
+
+    Deeper analysis can be performed in DevTools by uploading the
+    `*-code-size-analysis_*.json` file. The DevTools app size tool allows for a
+    tree or treemap view to break down application contents to individual file
+    and function levels for the Dart AOT artifact. This tool can be accessed by
+    running `dart devtools`, selecting "Open app size tool," and uploading the
+    JSON file. DevTools can also compare two builds by loading two
+    `*-code-size-analysis_*.json` files. The "size information" file contains
+    data for the total application size. The Dart AOT compiler performs
+    tree-shaking in profile or release modes, optimizing app size by removing
+    unused or unreachable code. The result is a collection of packages,
+    libraries, classes, and functions in the binary output, along with their
+    sizes in bytes, which can be analyzed in the app size tool.
+
+    For iOS, an Xcode App Size Report can be created by configuring the app
+    version and build, then running `flutter build ipa --export-method
+    development`. Opening the archive in Xcode, selecting "Distribute App"
+    (development is simplest), choosing "all compatible device variants" in App
+    Thinning, and stripping Swift symbols, allows for signing and exporting the
+    IPA. The exported directory will contain `App Thinning Size Report.txt` with
+    projected application sizes for different devices and iOS versions.
+
+    **Strategies for App Size Reduction:**
+    When building a release version of an app, using the `--split-debug-info`
+    tag can significantly reduce code size. Other methods to make an app smaller
+    include removing unused resources, minimizing resources imported from
+    libraries, and compressing PNG and JPEG files.
+  resources:
+    - https://docs.flutter.dev/ai-best-practices
+    - https://docs.flutter.dev/deployment/ios
+    - https://docs.flutter.dev/perf
+    - https://docs.flutter.dev/perf/app-size
+    - https://docs.flutter.dev/perf/best-practices
+    - https://docs.flutter.dev/platform-integration/ios/ios-app-clip
+    - https://docs.flutter.dev/platform-integration/windows/building
+    - https://docs.flutter.dev/resources/faq
+    - https://docs.flutter.dev/tools/devtools/app-size
+    - https://docs.flutter.dev/tools/devtools/memory
+    - https://docs.flutter.dev/tools/devtools/performance
+    - https://docs.flutter.dev/tools/sdk
+    - https://docs.flutter.dev/ui/adaptive-responsive
+    - https://docs.flutter.dev/ui/adaptive-responsive/best-practices
+    - https://docs.flutter.dev/ui/adaptive-responsive/general
+    - https://docs.flutter.dev/ui/adaptive-responsive/large-screens
