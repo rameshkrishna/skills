@@ -42,15 +42,6 @@ class ValidateSkillCommand extends BaseSkillCommand {
   }) async {
     logger.info('Validating skill: ${skill.name}...');
 
-    for (final resource in skill.resources) {
-      if (!resource.startsWith('https://')) {
-        logger.severe(
-          '  Invalid resource URL: $resource. Must start with https://',
-        );
-        return;
-      }
-    }
-
     try {
       // Re-generate markdown content
       final fetcher = ResourceFetcherService(

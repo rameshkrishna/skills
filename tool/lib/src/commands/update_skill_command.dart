@@ -38,15 +38,6 @@ class UpdateSkillCommand extends BaseSkillCommand {
   }) async {
     logger.info('Updating skill: ${skill.name}...');
 
-    for (final resource in skill.resources) {
-      if (!resource.startsWith('https://')) {
-        logger.severe(
-          '  Invalid resource URL: $resource. Must start with https://',
-        );
-        return;
-      }
-    }
-
     final skillFile = File(p.join(outputDir.path, skill.name, 'SKILL.md'));
     if (!skillFile.existsSync()) {
       logger.severe(
