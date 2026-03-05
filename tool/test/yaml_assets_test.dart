@@ -93,12 +93,42 @@ void main() {
                   'All skills in flutter_skills.yaml must start with "flutter-"',
             );
           });
+
+          test('description contains "Flutter"', () {
+            final description = item['description'] as String?;
+            expect(
+              description,
+              isNotNull,
+              reason: 'Skill must have a description',
+            );
+            expect(
+              description,
+              contains('Flutter'),
+              reason:
+                  'All skills in flutter_skills.yaml must contain "Flutter" in their description',
+            );
+          });
         } else if (p.basename(file.path) == 'dart_skills.yaml') {
           test('name starting with "dart-"', () {
             expect(
               name,
               startsWith('dart-'),
               reason: 'All skills in dart_skills.yaml must start with "dart-"',
+            );
+          });
+
+          test('description contains "Dart"', () {
+            final description = item['description'] as String?;
+            expect(
+              description,
+              isNotNull,
+              reason: 'Skill must have a description',
+            );
+            expect(
+              description,
+              contains('Dart'),
+              reason:
+                  'All skills in dart_skills.yaml must contain "Dart" in their description',
             );
           });
         }
