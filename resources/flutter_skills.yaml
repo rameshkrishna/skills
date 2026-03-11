@@ -6,8 +6,8 @@
 # To generate skills, use the following command (from the `tool` directory):
 # dart run skills generate-skill --config ../resources/flutter_skills.yaml --output ../skills
 
-- name: flutter-environment-setup-linux
-  description: Set up a Linux environment for Flutter development
+- name: flutter-setting-up-on-linux
+  description: Sets up a Linux environment for Flutter development. Use when configuring a Linux machine to run, build, or deploy Flutter applications.
   instructions: |
     Setting up a Linux environment for app development involves configuring your
     system to run, build, and deploy applications. This often includes
@@ -35,8 +35,8 @@
     - https://docs.flutter.dev/install/custom
     - https://docs.flutter.dev/platform-integration/linux/building
     - https://docs.flutter.dev/learn/pathway/quick-install
-- name: flutter-environment-setup-macos
-  description: Set up a macOS environment for Flutter development
+- name: flutter-setting-up-on-macos
+  description: Sets up a macOS environment for Flutter development. Use when configuring a macOS machine to run, build, or deploy Flutter applications for iOS or macOS.
   instructions: |
     To set up a macOS environment for Flutter development, you need to configure
     your development environment to run, build, and deploy Flutter applications
@@ -74,8 +74,8 @@
     - https://docs.flutter.dev/install/quick
     - https://docs.flutter.dev/platform-integration/ios/setup
     - https://docs.flutter.dev/platform-integration/macos
-- name: flutter-environment-setup-windows
-  description: Set up a Windows environment for Flutter development
+- name: flutter-setting-up-on-windows
+  description: Sets up a Windows environment for Flutter development. Use when configuring a Windows machine to run, build, or deploy Flutter applications for Windows desktop or Android.
   instructions: |
     To set up a Windows environment for app development, particularly with
     Flutter, several steps are involved.
@@ -145,8 +145,8 @@
     - https://docs.flutter.dev/platform-integration/windows/building
     - https://docs.flutter.dev/platform-integration/windows/setup
     - https://docs.flutter.dev/tools/vs-code
-- name: flutter-architecture
-  description: Build an app using the Flutter team's recommended app architecture
+- name: flutter-architecting-apps
+  description: Architects a Flutter application using the recommended layered approach (UI, Logic, Data). Use when structuring a new project or refactoring for scalability.
   instructions: |
     Architecture is a broad term that can refer to many topics depending on the
     context. In the context of Flutter, architecture refers to how to structure,
@@ -224,8 +224,8 @@
     - https://docs.flutter.dev/app-architecture/case-study/data-layer
     - https://docs.flutter.dev/app-architecture/design-patterns/key-value-data
     - https://docs.flutter.dev/learn/pathway/how-flutter-works
-- name: flutter-layout
-  description: How to build your app's layout using Flutter's layout widgets and constraint system
+- name: flutter-building-layouts
+  description: Builds Flutter layouts using the constraint system and layout widgets. Use when creating or refining the UI structure of a Flutter application.
   instructions: |
     In Flutter, almost everything is a widget, including layout models. Widgets
     are classes used to build user interfaces (UIs) and UI elements. Visible
@@ -276,8 +276,8 @@
     - https://docs.flutter.dev/ui/layout/constraints
     - https://docs.flutter.dev/ui/widgets/layout
     - https://docs.flutter.dev/learn/pathway/tutorial/layout
-- name: flutter-theming
-  description: How to customize your app's theme using Flutter's theming system
+- name: flutter-theming-apps
+  description: Customizes the visual appearance of a Flutter app using the theming system. Use when defining global styles, colors, or typography for an application.
   instructions: |
     Theming involves sharing colors and font styles throughout an app. You can
     define app-wide themes and extend a theme to change a theme style for one
@@ -347,8 +347,8 @@
     - https://docs.flutter.dev/cookbook/design/themes
     - https://docs.flutter.dev/ui/adaptive-responsive/idioms
     - https://docs.flutter.dev/ui
-- name: flutter-form
-  description: Build a form with validation
+- name: flutter-building-forms
+  description: Builds Flutter forms with validation and user input handling. Use when creating login screens, data entry forms, or any multi-field user input.
   instructions: |
     To build a form with validation, you need to create a `Form` widget with a
     `GlobalKey`. This `GlobalKey` uniquely identifies the `Form` widget and
@@ -397,8 +397,8 @@
     - https://docs.flutter.dev/ui/adaptive-responsive/best-practices
     - https://docs.flutter.dev/ui/interactivity/input
 
-- name: flutter-routing-and-navigation
-  description: Move between or deep link to different screens or routes within a Flutter application
+- name: flutter-implementing-navigation-and-routing
+  description: Handles routing, navigation, and deep linking in a Flutter application. Use when moving between screens or setting up URL-based navigation.
   instructions: |
     Routing and navigation involve moving between different screens or "routes"
     within an application. In Flutter, screens and pages are referred to as
@@ -450,8 +450,8 @@
     - https://docs.flutter.dev/cookbook/navigation/named-routes
     - https://docs.flutter.dev/cookbook/navigation/passing-data
     - https://docs.flutter.dev/resources/glossary/index.html.md
-- name: flutter-animation
-  description: Add animated effects to your Flutter app
+- name: flutter-animating-apps
+  description: Implements animated effects, transitions, and motion in a Flutter app. Use when adding visual feedback, shared element transitions, or physics-based animations.
   instructions: |
     Animation is a broad topic that encompasses various types and patterns,
     often implemented using a system based on typed `Animation` objects.
@@ -531,8 +531,8 @@
     - https://docs.flutter.dev/cookbook/animation/animated-container
     - https://docs.flutter.dev/ui/widgets/animation
     - https://docs.flutter.dev/cookbook/animation/page-route-animation
-- name: flutter-localization
-  description: Configure your Flutter app to support different languages and regions
+- name: flutter-localizing-apps
+  description: Configures a Flutter app to support multiple languages and regions. Use when preparing an application for international markets and diverse user locales.
   instructions: |
    Localization in Flutter involves adapting an app to different languages and
    regions. By default, Flutter only supports US English for its strings. To add
@@ -600,8 +600,8 @@
     - https://docs.flutter.dev/release/breaking-changes/flutter-generate-i10n-source
     - https://docs.flutter.dev/release/breaking-changes/material-localized-strings
     - https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations
-- name: flutter-accessibility
-  description: Configure your Flutter app to support assistive technologies like Screen Readers
+- name: flutter-improving-accessibility
+  description: Configures a Flutter app to support assistive technologies like Screen Readers. Use when ensuring an application is usable for people with disabilities.
   instructions: |
    Accessibility is crucial for building high-quality applications that can be
    used by a broad range of users. Poorly designed applications create barriers
@@ -681,8 +681,8 @@
     - https://docs.flutter.dev/ui/adaptive-responsive/input
     - https://docs.flutter.dev/ui/accessibility/web-accessibility
     - https://docs.flutter.dev/resources/glossary
-- name: flutter-state-management
-  description: Manage state in your Flutter application
+- name: flutter-managing-state
+  description: Manages application and ephemeral state in a Flutter app. Use when sharing data between widgets or handling complex UI state transitions.
   instructions: |
     State management in Flutter refers to how an app organizes its objects to
     effectively access them and share them between different widgets. State is
@@ -767,8 +767,8 @@
     - https://docs.flutter.dev/perf/isolates
     - https://docs.flutter.dev/resources/architectural-overview
     - https://docs.flutter.dev/ui
-- name: flutter-http-and-json
-  description: Make HTTP requests and encode / decode JSON in a Flutter app
+- name: flutter-handling-http-and-json
+  description: Executes HTTP requests and handles JSON serialization in a Flutter app. Use when integrating with REST APIs or parsing structured data from external sources.
   instructions: |
     HTTP and JSON are fundamental for networking and data handling in
     applications.
@@ -825,8 +825,8 @@
     - https://docs.flutter.dev/learn/pathway/tutorial/http-requests
     - https://docs.flutter.dev/release/breaking-changes/asset-manifest-dot-json
     - https://docs.flutter.dev/release/breaking-changes/network-policy-ios-android
-- name: flutter-databases
-  description: Work with databases in a Flutter app
+- name: flutter-working-with-databases
+  description: Manages local data persistence using SQLite or other database solutions. Use when a Flutter app needs to store, query, or synchronize large amounts of structured data on the device.
   instructions: |
     Databases are a crucial component of an application's data layer, which
     serves as the source of truth for all application data. This data layer,
@@ -903,8 +903,8 @@
     - https://docs.flutter.dev/data-and-backend
     - https://docs.flutter.dev/get-started/fundamentals/local-caching
     - https://docs.flutter.dev/resources/architectural-overview
-- name: flutter-caching
-  description: Cache data in a Flutter app
+- name: flutter-caching-data
+  description: Implements caching strategies for Flutter apps to improve performance and offline support. Use when retaining app data locally to reduce network requests or speed up startup.
   instructions: |
     Caching is a technique for retaining application data to show again at a
     future time, rather than repeatedly loading it from a remote server. This
@@ -971,8 +971,8 @@
     - https://docs.flutter.dev/release/breaking-changes/image-cache-and-provider
     - https://docs.flutter.dev/release/breaking-changes/imagecache-large-images
     - https://docs.flutter.dev/release/breaking-changes/scroll-cache-extent
-- name: flutter-platform-views
-  description: Add a native view into your Flutter app
+- name: flutter-embedding-native-views
+  description: Embeds native Android, iOS, or macOS views into a Flutter app. Use when integrating complex native components like maps or web views.
   instructions: |
     Platform Views allow you to embed native views into a Flutter application.
     This functionality enables the application of transforms, clips, and opacity
@@ -1053,8 +1053,8 @@
     - https://docs.flutter.dev/release/breaking-changes/platform-views-using-html-slots-web
     - https://docs.flutter.dev/resources/architectural-overview
     - https://docs.flutter.dev/resources/faq
-- name: flutter-native-interop
-  description: Interoperate with native APIs in a Flutter app on Android, iOS, and the web
+- name: flutter-interoperating-with-native-apis
+  description: Interoperates with native platform APIs on Android, iOS, and the web. Use when accessing device-specific features not available in Dart or calling existing native code.
   instructions: |
     Native interop on Android, iOS, and Web involves several methods for
     integrating Flutter applications with platform-specific code and features.
@@ -1129,8 +1129,8 @@
     - https://docs.flutter.dev/platform-integration/web/wasm
     - https://docs.flutter.dev/platform-integration/web/web-content-in-flutter
     - https://docs.flutter.dev/resources/faq
-- name: flutter-plugins
-  description: Build a Flutter plugin that provides native interop for other Flutter apps to use
+- name: flutter-building-plugins
+  description: Builds Flutter plugins that provide native interop for other apps to use. Use when creating reusable packages that bridge Flutter with platform-specific functionality.
   instructions: |
     To build a plugin, you first need to create the package. You can create a
     plugin package using the `flutter create --template=plugin` command. When
@@ -1208,8 +1208,8 @@
     - https://docs.flutter.dev/testing/plugins-in-tests
     - https://docs.flutter.dev/testing/testing-plugins
     - https://docs.flutter.dev/tools/android-studio
-- name: flutter-testing
-  description: Add Flutter unit tests, widget tests, or integration tests
+- name: flutter-testing-apps
+  description: Implements unit, widget, and integration tests for a Flutter app. Use when ensuring code quality and preventing regressions through automated testing.
   instructions: |
     Automated testing is crucial for ensuring an app performs correctly before
     publication and for maintaining feature and bug fix velocity, especially as
@@ -1291,94 +1291,8 @@
     - https://docs.flutter.dev/testing/integration-tests
     - https://docs.flutter.dev/testing/overview
     - https://docs.flutter.dev/testing/testing-plugins
-- name: flutter-performance
-  description: Optimize the performance of your Flutter app
-  instructions: |
-    Performance optimization involves evaluating an app's performance from
-    various angles, including speed and app size. The goal is to answer
-    questions about what performance is, why it's important, and how to improve
-    it. To improve performance, measurable metrics are needed to verify problems
-    and improvements. These metrics should be easily reproducible, and when
-    there's noise, the full distribution should be shown or noise eliminated by
-    aggregating many measurements. It should be easy to compare performance, for
-    example, by providing a timeline to compare current and old versions. Tools
-    and ways to convert one metric to another are also helpful, such as
-    converting memory increase and FPS drops into revenue lost or users dropped
-    to make informed trade-offs. Performance metrics should monitor as wide a
-    population as possible.
-
-    Flutter applications are generally performant by default, so avoiding common
-    pitfalls can lead to excellent performance. Performance issues can be
-    categorized into speed, memory, app size, and energy. This document serves
-    as a root node for resources addressing performance questions.
-
-    Key best practices for performance optimization include minimizing expensive
-    operations, controlling `build()` costs, and using `StringBuffer` for
-    efficient string building. Expensive operations consume more resources and
-    should only be used when necessary. The design and implementation of an
-    app's UI significantly impact its efficiency. When designing the UI, avoid
-    repetitive and costly work in `build()` methods, as they can be invoked
-    frequently when ancestor widgets rebuild. Also, avoid overly large single
-    widgets with large `build()` functions.
-
-    To control `build()` costs, split widgets based on encapsulation and how
-    they change. When `setState()` is called on a `State` object, all descendant
-    widgets rebuild. Therefore, localize `setState()` calls to the part of the
-    subtree whose UI actually needs to change, avoiding calls high up in the
-    tree if the change is contained to a small part. The rebuild traversal stops
-    when the same instance of a child widget from the previous frame is
-    re-encountered. Using `const` constructors on widgets as much as possible
-    allows Flutter to short-circuit most rebuild work. Enabling recommended
-    lints from the `flutter_lints` package can automatically remind developers
-    to use `const`. For reusable UI pieces, prefer `StatelessWidget` over
-    functions.
-
-    Other best practices include using `saveLayer()` thoughtfully, minimizing
-    the use of opacity and clipping, and implementing grids and lists
-    thoughtfully. It's also important to minimize layout passes caused by
-    intrinsic operations and to build and display frames within 16ms.
-
-    Flutter provides several tools for performance analysis. The Performance
-    View, part of Flutter DevTools, helps debug performance issues. It includes
-    a Flutter frames chart, frame analysis tab, timeline events trace viewer,
-    and advanced debugging tools. The CPU profiler view in DevTools allows
-    recording and profiling sessions for Dart and Flutter applications to
-    understand CPU activity. The Performance Overlay displays simplified metrics
-    directly within a running app. For web apps, Chrome DevTools can be used to
-    debug performance issues, with Flutter emitting timeline events that are
-    exposed in the Chrome DevTools performance panel. Profiling Flutter web apps
-    requires Flutter version 3.14 or later. Optional flags like
-    `debugProfileBuildsEnabled` and `debugProfileBuildsEnabledUserWidgets` can
-    enhance tracing by adding timeline events for widget builds.
-
-    When analyzing performance, it's crucial to use a profile build of the
-    application, as frame rendering times in debug mode are not indicative of
-    release performance. Running in profile mode still preserves useful
-    debugging information. Flutter aims to render its UI at 60 frames per second
-    (fps), or 120 fps on devices capable of 120Hz updates. Each render is called
-    a frame, meaning the UI updates approximately every 16ms. A frame taking
-    longer than 16ms to render causes "jank" or jerky motion.
-
-    Specific costly performance operations to be careful with include `Opacity`,
-    `Clip.antiAliasWithSaveLayer`, or anything that triggers `saveLayer`, and
-    `ImageFilter`. Rebuild optimization for `OverlayEntries` and `Routes` has
-    improved performance for route transitions by removing unnecessary rebuilds.
-  resources:
-    - https://docs.flutter.dev/cookbook/testing/integration/profiling
-    - https://docs.flutter.dev/perf
-    - https://docs.flutter.dev/perf/appendix
-    - https://docs.flutter.dev/perf/best-practices
-    - https://docs.flutter.dev/perf/faq
-    - https://docs.flutter.dev/perf/metrics
-    - https://docs.flutter.dev/perf/rendering-performance
-    - https://docs.flutter.dev/perf/ui-performance
-    - https://docs.flutter.dev/perf/web-performance
-    - https://docs.flutter.dev/release/breaking-changes/layout-builder-optimization
-    - https://docs.flutter.dev/release/breaking-changes/overlay-entry-rebuilds
-    - https://docs.flutter.dev/tools/devtools/cpu-profiler
-    - https://docs.flutter.dev/tools/devtools/performance
-- name: flutter-app-size
-  description: Measure and reduce the size of the Flutter app bundle, APK, or IPA
+- name: flutter-reducing-app-size
+  description: Measures and optimizes the size of Flutter application bundles for deployment. Use when minimizing download size or meeting app store package constraints.
   instructions: |
     To effectively reduce app size, an agent needs to understand how to measure
     app size, analyze its components, and implement specific reduction
@@ -1446,8 +1360,8 @@
     - https://docs.flutter.dev/ui/adaptive-responsive/best-practices
     - https://docs.flutter.dev/ui/adaptive-responsive/general
     - https://docs.flutter.dev/ui/adaptive-responsive/large-screens
-- name: flutter-concurrency
-  description: Execute long-running tasks in a background thread in Flutter
+- name: flutter-handling-concurrency
+  description: Executes long-running tasks in background isolates to keep the UI responsive. Use when performing heavy computations or parsing large datasets.
   instructions: |
     Dart has a single-threaded execution model, which includes support for
     Isolates, an event loop, and asynchronous code. An Isolate is Dart's
@@ -1509,8 +1423,8 @@
     - https://docs.flutter.dev/resources/architectural-overview
     - https://docs.flutter.dev/resources/bootstrap-into-dart
     - https://docs.flutter.dev/resources/faq
-- name: flutter-home-screen-widget
-  description: Adding a Home Screen widget to your Flutter App
+- name: flutter-adding-home-screen-widgets
+  description: Adds home screen widgets to a Flutter app for Android and iOS. Use when providing glanceable app information or quick actions on the device home screen.
   instructions: |
     Home screen widgets allow users to see and interact with your app's data
     directly from their device's home screen. Adding a home screen widget to a

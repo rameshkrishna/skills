@@ -11,14 +11,7 @@ class Prompts {
     return '''
 Rewrite the following technical documentation into a high-quality "SKILL.md" file.
 
-DO NOT include any YAML frontmatter. Start immediately with the markdown content (e.g. headers).
-
-**Guidelines:**
-1. **Ignore Noise**: Exclude navigation bars, footers, "Edit this page" links, and other non-technical content.
-2. **Decision Trees**: If the content describes a process with multiple choices or steps, YOU MUST create a "Decision Logic" or "Flowchart" section to guide the agent.
-3. **Clarity**: Use clear headings, bullet points, and code blocks.
-4. **Format**: Do NOT wrap the entire output in a markdown code block (like ```markdown ... ```). Return raw markdown text.
-${instructions != null && instructions.isNotEmpty ? '5. **Special Instructions**: $instructions' : ''}
+${instructions != null && instructions.isNotEmpty ? 'Special Instructions: $instructions' : ''}
 
 Raw Content:
 $markdown
@@ -33,15 +26,9 @@ $markdown
   ) {
     return '''
 Update the following existing "SKILL.md" file using the provided new technical documentation.
+Carefully integrate the new information without losing valuable existing instructions or context.
 
-DO NOT include any YAML frontmatter. Start immediately with the markdown content (e.g. headers).
-
-**Guidelines:**
-1. **Preserve Useful Content**: Carefully integrate the new information without losing valuable existing instructions, examples, or context from the Existing SKILL.md Content.
-2. **Ignore Noise**: Exclude navigation bars, footers, "Edit this page" links, and other non-technical content from the new documentation.
-3. **Decision Trees**: If the new content describes a process with multiple choices or steps, ensure the "Decision Logic" or "Flowchart" section is updated or created.
-4. **Clarity & Format**: Use clear headings, bullet points, and code blocks. Do NOT wrap the entire output in a markdown code block (like ```markdown ... ```). Return raw markdown text.
-${instructions != null && instructions.isNotEmpty ? '5. **Special Instructions**: $instructions' : ''}
+${instructions != null && instructions.isNotEmpty ? 'Special Instructions: $instructions' : ''}
 
 Existing SKILL.md Content:
 $existingContent
@@ -61,10 +48,7 @@ $markdown
   ) {
     return '''
 Validate the following skill document against the provided source material and verify if it is valid.
-Focus on:
-1. Accuracy: Does the skill capture the technical details correctly based on the Source Material?
-2. Structure: Is the skill well-structured according to skill best practices?
-3. Completeness: Is any critical information missing in the skill that is present in the Source Material?
+Focus on accuracy, structure, and completeness based on the Source Material and the system instructions.
 
 Context:
 - The skill was originally generated on: $generationDate

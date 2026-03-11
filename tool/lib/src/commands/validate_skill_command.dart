@@ -73,11 +73,12 @@ class ValidateSkillCommand extends BaseSkillCommand {
 
       final existingSkillFileContent = existingSkillFile.readAsStringSync();
 
-      // Check for verbatim name and description
-      if (!existingSkillFileContent.contains('name: ${skill.name}')) {
+      // Check for verbatim name
+      final namePattern = RegExp('name:\\s*["\']?${RegExp.escape(skill.name)}["\']?');
+      if (!namePattern.hasMatch(existingSkillFileContent)) {
         logger.severe(
           '  Validation Failed: Skill name mismatch in ${existingSkillFile.path}. '
-          'Expected "name: ${skill.name}"',
+          'Expected "name: ${skill.name}" (quotes allowed)',
         );
       }
 
