@@ -971,6 +971,70 @@
     - https://docs.flutter.dev/release/breaking-changes/image-cache-and-provider
     - https://docs.flutter.dev/release/breaking-changes/imagecache-large-images
     - https://docs.flutter.dev/release/breaking-changes/scroll-cache-extent
+- name: flutter-ci-cd
+  description: Designs CI/CD pipelines for Flutter apps, including pull request validation, build automation, artifact publishing, signing boundaries, and store release workflows. Use when setting up Flutter build, test, and release automation with GitHub Actions, Fastlane, or similar CI systems.
+  instructions: |
+    CI/CD for Flutter should be treated as two connected but separate concerns:
+    **continuous integration** that validates code on every change, and
+    **continuous delivery/deployment** that creates signed artifacts and promotes
+    releases. Optimize first for reliable pull request feedback, then add
+    release automation with explicit approval boundaries for secrets, signing,
+    and store submission.
+
+    The primary workflow target is GitHub Actions. Structure guidance around
+    workflows, jobs, caches, matrices, artifacts, environments, and secrets.
+    Prefer a split pipeline: one workflow for pull request validation and one
+    for release or store delivery. Use caching to reduce repeated dependency
+    downloads, but do not let cache strategy obscure the critical build and test
+    steps.
+
+    The primary release automation tool is Fastlane. For Android, focus on
+    versioning, signing, building an AAB or APK, and uploading to internal
+    testing or production tracks. For iOS, focus on code signing prerequisites,
+    archive/export steps, and TestFlight or App Store delivery. Explain that
+    signing material and API credentials must be provisioned outside the repo
+    and injected through the CI provider's secret store or secure environment.
+    Treat release build options as explicit user decisions. Tell the agent to ask
+    whether obfuscation or any other relevant build options should be enabled
+    before finalizing release build steps. Confirm material flags such as flavor,
+    target entrypoint, dart-defines, export method, split-debug-info handling,
+    or target-platform overrides when they affect the build. If the user wants
+    obfuscation, include `--obfuscate` together with `--split-debug-info` and
+    preserve the symbol output as a protected artifact or secure build output
+    for later crash symbolication.
+
+    Cover the standard pipeline stages in this order unless the user has a clear
+    reason to differ: dependency resolution, formatting, static analysis, unit
+    and widget tests, integration tests when appropriate, platform builds,
+    artifact publishing, and release promotion. Integration tests should be
+    conditional because they often require emulators, devices, or extra system
+    services.
+
+    Keep the guidance Flutter-specific rather than generic DevOps advice. Include
+    concrete decision logic for:
+    - pull request validation only
+    - Android release automation
+    - iOS release automation
+    - monorepos or packages where path filtering, matrices, or multiple app
+      targets change the pipeline shape
+
+    Mention non-primary providers, such as Codemagic or self-hosted runners,
+    only as adaptation guidance. Do not turn the skill into a catalog of CI
+    vendors. Prefer explaining what properties the pipeline needs, then show how
+    those map naturally to GitHub Actions and Fastlane.
+  resources:
+    - https://docs.flutter.dev/deployment/android
+    - https://docs.flutter.dev/deployment/cd
+    - https://docs.flutter.dev/deployment/ios
+    - https://docs.flutter.dev/testing/integration-tests
+    - https://docs.github.com/actions
+    - https://docs.github.com/actions/concepts/workflows-and-actions
+    - https://docs.github.com/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
+    - https://docs.github.com/actions/using-jobs/using-a-matrix-for-your-jobs
+    - https://docs.fastlane.tools
+    - https://docs.fastlane.tools/getting-started/android/setup/
+    - https://docs.fastlane.tools/getting-started/ios/setup/
+    - https://docs.fastlane.tools/best-practices/continuous-integration/
 - name: flutter-embedding-native-views
   description: Embeds native Android, iOS, or macOS views into a Flutter app. Use when integrating complex native components like maps or web views.
   instructions: |
@@ -1442,3 +1506,9 @@
   resources:
     - https://codelabs.developers.google.com/flutter-home-screen-widgets#0
     - https://pub.dev/packages/home_widget
+
+
+
+
+
+
