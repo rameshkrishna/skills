@@ -1,9 +1,9 @@
 ---
-name: "flutter-handling-concurrency"
-description: "Executes long-running tasks in background isolates to keep the UI responsive. Use when performing heavy computations or parsing large datasets."
+name: flutter-handling-concurrency
+description: Executes long-running tasks in background isolates to keep the UI responsive. Use when performing heavy computations or parsing large datasets.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:23:14 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:23:14 GMT
 
 ---
 # Managing Dart Concurrency and Isolates

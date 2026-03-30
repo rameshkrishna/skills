@@ -1,9 +1,9 @@
 ---
-name: "flutter-building-plugins"
-description: "Builds Flutter plugins that provide native interop for other apps to use. Use when creating reusable packages that bridge Flutter with platform-specific functionality."
+name: flutter-building-plugins
+description: Builds Flutter plugins that provide native interop for other apps to use. Use when creating reusable packages that bridge Flutter with platform-specific functionality.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:21:35 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:21:35 GMT
 
 ---
 # Developing Flutter Plugins

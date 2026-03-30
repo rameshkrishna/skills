@@ -1,9 +1,9 @@
 ---
-name: "flutter-animating-apps"
-description: "Implements animated effects, transitions, and motion in a Flutter app. Use when adding visual feedback, shared element transitions, or physics-based animations."
+name: flutter-animating-apps
+description: Implements animated effects, transitions, and motion in a Flutter app. Use when adding visual feedback, shared element transitions, or physics-based animations.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:16:34 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:16:34 GMT
 
 ---
 # Implementing Flutter Animations

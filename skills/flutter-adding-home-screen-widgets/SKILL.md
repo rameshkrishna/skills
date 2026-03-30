@@ -1,9 +1,9 @@
 ---
-name: "flutter-adding-home-screen-widgets"
-description: "Adds home screen widgets to a Flutter app for Android and iOS. Use when providing glanceable app information or quick actions on the device home screen."
+name: flutter-adding-home-screen-widgets
+description: Adds home screen widgets to a Flutter app for Android and iOS. Use when providing glanceable app information or quick actions on the device home screen.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:23:50 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:23:50 GMT
 
 ---
 # Implementing Flutter Home Screen Widgets

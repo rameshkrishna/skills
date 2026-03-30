@@ -1,9 +1,9 @@
 ---
-name: "flutter-reducing-app-size"
-description: "Measures and optimizes the size of Flutter application bundles for deployment. Use when minimizing download size or meeting app store package constraints."
+name: flutter-reducing-app-size
+description: Measures and optimizes the size of Flutter application bundles for deployment. Use when minimizing download size or meeting app store package constraints.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:22:44 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:22:44 GMT
 
 ---
 # Reducing Flutter App Size

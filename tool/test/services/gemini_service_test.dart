@@ -2,7 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 import 'package:skills/src/services/gemini_service.dart';
 import 'package:test/test.dart';
@@ -185,6 +188,103 @@ Some content
 Some content
 ''';
         expect(service.cleanContent(content), expected);
+      });
+    });
+
+    group('generateSkillContent front matter', () {
+      test('does not wrap metadata values with quotes', () async {
+        final mockClient = MockClient((request) async {
+          return http.Response(
+            jsonEncode({
+              'candidates': [
+                {
+                  'content': {
+                    'parts': [
+                      {'text': 'Markdown body'},
+                    ],
+                  },
+                },
+              ],
+            }),
+            200,
+          );
+        });
+
+        final serviceWithMock = GeminiService(
+          apiKey: 'test-api-key',
+          httpClient: mockClient,
+          model: 'models/test-model',
+        );
+
+        final result = await serviceWithMock.generateSkillContent(
+          'Raw Content',
+          'test-skill',
+          'Test description without quotes',
+        );
+
+        expect(result, isNotNull);
+        expect(result, contains('name: test-skill'));
+        expect(
+          result,
+          contains('description: Test description without quotes'),
+        );
+        expect(result, contains('model: models/test-model'));
+        // Make sure it doesn't contain double quotes for the fields
+        expect(result, isNot(contains('name: "test-skill"')));
+        expect(
+          result,
+          isNot(contains('description: "Test description without quotes"')),
+        );
+        expect(result, isNot(contains('model: "models/test-model"')));
+      });
+    });
+
+    group('updateSkillContent front matter', () {
+      test('does not wrap metadata values with quotes', () async {
+        final mockClient = MockClient((request) async {
+          return http.Response(
+            jsonEncode({
+              'candidates': [
+                {
+                  'content': {
+                    'parts': [
+                      {'text': 'Markdown body'},
+                    ],
+                  },
+                },
+              ],
+            }),
+            200,
+          );
+        });
+
+        final serviceWithMock = GeminiService(
+          apiKey: 'test-api-key',
+          httpClient: mockClient,
+          model: 'models/test-model',
+        );
+
+        final result = await serviceWithMock.updateSkillContent(
+          'Existing Content',
+          'Raw Content',
+          'test-skill',
+          'Test description without quotes',
+        );
+
+        expect(result, isNotNull);
+        expect(result, contains('name: test-skill'));
+        expect(
+          result,
+          contains('description: Test description without quotes'),
+        );
+        expect(result, contains('model: models/test-model'));
+        // Make sure it doesn't contain double quotes for the fields
+        expect(result, isNot(contains('name: "test-skill"')));
+        expect(
+          result,
+          isNot(contains('description: "Test description without quotes"')),
+        );
+        expect(result, isNot(contains('model: "models/test-model"')));
       });
     });
   });

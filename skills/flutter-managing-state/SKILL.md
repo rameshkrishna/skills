@@ -1,9 +1,9 @@
 ---
-name: "flutter-managing-state"
-description: "Manages application and ephemeral state in a Flutter app. Use when sharing data between widgets or handling complex UI state transitions."
+name: flutter-managing-state
+description: Manages application and ephemeral state in a Flutter app. Use when sharing data between widgets or handling complex UI state transitions.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:18:06 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:18:06 GMT
 
 ---
 # Managing State in Flutter

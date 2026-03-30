@@ -1,9 +1,9 @@
 ---
-name: "flutter-interoperating-with-native-apis"
-description: "Interoperates with native platform APIs on Android, iOS, and the web. Use when accessing device-specific features not available in Dart or calling existing native code."
+name: flutter-interoperating-with-native-apis
+description: Interoperates with native platform APIs on Android, iOS, and the web. Use when accessing device-specific features not available in Dart or calling existing native code.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:21:02 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:21:02 GMT
 
 ---
 # Integrating Platform-Specific Code in Flutter

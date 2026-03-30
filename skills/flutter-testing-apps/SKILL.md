@@ -1,9 +1,9 @@
 ---
-name: "flutter-testing-apps"
-description: "Implements unit, widget, and integration tests for a Flutter app. Use when ensuring code quality and preventing regressions through automated testing."
+name: flutter-testing-apps
+description: Implements unit, widget, and integration tests for a Flutter app. Use when ensuring code quality and preventing regressions through automated testing.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:22:10 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:22:10 GMT
 
 ---
 # Testing Flutter Applications

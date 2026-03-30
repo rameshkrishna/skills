@@ -9,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
-import 'package:yaml_writer/yaml_writer.dart';
 
 import 'prompts.dart';
 import 'skill_instructions.dart';
@@ -101,13 +100,15 @@ class GeminiService {
 
       final content = response;
 
-      final frontMatterMap = {
-        'name': skillName,
-        'description': description,
-        'metadata': {'model': _model, 'last_modified': lastModified},
-      };
-
-      final frontmatter = '---\n${YamlWriter().write(frontMatterMap)}\n---\n';
+      final frontmatter =
+          '''---
+name: $skillName
+description: $description
+metadata:
+  model: $_model
+  last_modified: $lastModified
+---
+''';
 
       return frontmatter + (cleanContent(content) ?? '');
     } on Object catch (e) {
@@ -162,13 +163,15 @@ class GeminiService {
 
       final content = response;
 
-      final frontMatterMap = {
-        'name': skillName,
-        'description': description,
-        'metadata': {'model': _model, 'last_modified': lastModified},
-      };
-
-      final frontmatter = '---\n${YamlWriter().write(frontMatterMap)}\n---\n';
+      final frontmatter =
+          '''---
+name: $skillName
+description: $description
+metadata:
+  model: $_model
+  last_modified: $lastModified
+---
+''';
 
       return frontmatter + (cleanContent(content) ?? '');
     } on Object catch (e) {

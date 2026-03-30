@@ -1,9 +1,9 @@
 ---
-name: "flutter-architecting-apps"
-description: "Architects a Flutter application using the recommended layered approach (UI, Logic, Data). Use when structuring a new project or refactoring for scalability."
+name: flutter-architecting-apps
+description: Architects a Flutter application using the recommended layered approach (UI, Logic, Data). Use when structuring a new project or refactoring for scalability.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:13:42 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:13:42 GMT
 
 ---
 # Architecting Flutter Applications

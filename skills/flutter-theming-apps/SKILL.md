@@ -1,9 +1,9 @@
 ---
-name: "flutter-theming-apps"
-description: "Customizes the visual appearance of a Flutter app using the theming system. Use when defining global styles, colors, or typography for an application."
+name: flutter-theming-apps
+description: Customizes the visual appearance of a Flutter app using the theming system. Use when defining global styles, colors, or typography for an application.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:14:47 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:14:47 GMT
 
 ---
 # Implementing Flutter Theming and Adaptive Design

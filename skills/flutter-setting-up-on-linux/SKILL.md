@@ -1,9 +1,9 @@
 ---
-name: "flutter-setting-up-on-linux"
-description: "Sets up a Linux environment for Flutter development. Use when configuring a Linux machine to run, build, or deploy Flutter applications."
+name: flutter-setting-up-on-linux
+description: Sets up a Linux environment for Flutter development. Use when configuring a Linux machine to run, build, or deploy Flutter applications.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:12:22 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:12:22 GMT
 
 ---
 # Setting Up a Linux Environment for Flutter Development

@@ -1,9 +1,9 @@
 ---
-name: "flutter-setting-up-on-windows"
-description: "Sets up a Windows environment for Flutter development. Use when configuring a Windows machine to run, build, or deploy Flutter applications for Windows desktop or Android."
+name: flutter-setting-up-on-windows
+description: Sets up a Windows environment for Flutter development. Use when configuring a Windows machine to run, build, or deploy Flutter applications for Windows desktop or Android.
 metadata:
-  model: "models/gemini-3.1-pro-preview"
-  last_modified: "Thu, 12 Mar 2026 22:13:13 GMT"
+  model: models/gemini-3.1-pro-preview
+  last_modified: Thu, 12 Mar 2026 22:13:13 GMT
 
 ---
 # Setting Up Flutter for Windows Development
