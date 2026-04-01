@@ -1,0 +1,66 @@
+import 'dart:io';
+import 'package:test/test.dart';
+import 'package:dart_skills_lint/src/validator.dart';
+import 'package:dart_skills_lint/src/models/check_type.dart';
+
+void main() {
+  group('Relative Path Flag Validation', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('relative_path_test.');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+
+    test('validates links when relativePathsSeverity = warning', () async {
+      final skillDir = Directory('${tempDir.path}/test-skill');
+      await skillDir.create();
+      await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: test-skill
+description: A test skill
+---
+Body with [broken link](missing.md) and [absolute link](/absolute/path.md)''');
+
+      final validator = Validator(rules: {
+        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
+      });
+      final result = await validator.validate(skillDir);
+
+      expect(result.isValid, isFalse);
+      expect(
+          result.errors,
+          contains(
+              contains('Absolute filepath found in link: /absolute/path.md')));
+      expect(result.warnings,
+          contains(contains('Linked file does not exist: missing.md')));
+    });
+
+    test('passes when relativePathsSeverity = warning and links are valid',
+        () async {
+      final skillDir = Directory('${tempDir.path}/test-skill');
+      await skillDir.create();
+      await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: test-skill
+description: A test skill
+---
+Body with [valid relative link](valid.md)''');
+      await File('${skillDir.path}/valid.md')
+          .writeAsString('Valid file content');
+
+      final validator = Validator(rules: {
+        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
+      });
+      final result = await validator.validate(skillDir);
+
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.warnings, isEmpty);
+    });
+  });
+}

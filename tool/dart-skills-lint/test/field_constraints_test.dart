@@ -1,0 +1,166 @@
+import 'dart:io';
+import 'package:test/test.dart';
+import 'package:dart_skills_lint/src/validator.dart';
+
+void main() {
+  group('Field Specific Constraints Validation', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('fields_test.');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    group('Skill Name', () {
+      test('fails if not lowercase', () async {
+        final skillDir = await Directory('${tempDir.path}/Skill-Name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: Skill-Name
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(result.errors, contains(contains('lowercase')));
+      });
+
+      test('fails if too long (> ${Validator.maxNameLength} chars)', () async {
+        final longName = 'a' * (Validator.maxNameLength + 1);
+        final skillDir = await Directory('${tempDir.path}/$longName').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: $longName
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(
+            result.errors,
+            contains(
+                contains('Maximum ${Validator.maxNameLength} characters')));
+      });
+
+      test('fails if contains invalid characters', () async {
+        final skillDir = await Directory('${tempDir.path}/skill_name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: skill_name
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(result.errors,
+            contains(contains('lowercase letters, digits, and hyphens')));
+      });
+
+      test('fails if has leading hyphen', () async {
+        final skillDir =
+            await Directory('${tempDir.path}/-skill-name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: -skill-name
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(
+            result.errors, contains(contains('leading or trailing hyphens')));
+      });
+
+      test('fails if has trailing hyphen', () async {
+        final skillDir =
+            await Directory('${tempDir.path}/skill-name-').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: skill-name-
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(
+            result.errors, contains(contains('leading or trailing hyphens')));
+      });
+
+      test('fails if has consecutive hyphens', () async {
+        final skillDir =
+            await Directory('${tempDir.path}/skill--name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: skill--name
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(result.errors, contains(contains('consecutive hyphens')));
+      });
+
+      test('fails if name does not match directory name', () async {
+        final skillDir = await Directory('${tempDir.path}/wrong-name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: right-name
+description: A test skill
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(
+            result.errors,
+            contains(contains(
+                'must exactly match the name of its parent directory')));
+      });
+    });
+
+    group('Description', () {
+      test('fails if too long (> ${Validator.maxDescriptionLength} chars)',
+          () async {
+        final longDesc = 'a' * (Validator.maxDescriptionLength + 1);
+        final skillDir = await Directory('${tempDir.path}/skill-name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: skill-name
+description: $longDesc
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(
+            result.errors,
+            contains(contains(
+                'Maximum ${Validator.maxDescriptionLength} characters')));
+      });
+    });
+
+    group('Compatibility', () {
+      test('fails if too long (> ${Validator.maxCompatibilityLength} chars)',
+          () async {
+        final longComp = 'a' * (Validator.maxCompatibilityLength + 1);
+        final skillDir = await Directory('${tempDir.path}/skill-name').create();
+        await File('${skillDir.path}/SKILL.md').writeAsString('''---
+name: skill-name
+description: A test skill
+compatibility: $longComp
+---
+Body''');
+        final validator = Validator();
+        final result = await validator.validate(skillDir);
+        expect(result.isValid, isFalse);
+        expect(
+            result.errors,
+            contains(contains(
+                'Maximum ${Validator.maxCompatibilityLength} characters')));
+      });
+    });
+  });
+}
