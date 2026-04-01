@@ -1,3 +1,5 @@
+// ignore_for_file: specify_nonobvious_local_variable_types yaml parsing has dynamic types.
+
 import 'dart:io';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -12,9 +14,15 @@ const _pathKey = 'path';
 const _ignoreFileKey = 'ignore_file';
 
 AnalysisSeverity _parseSeverity(String value) {
-  if (value == 'error') return AnalysisSeverity.error;
-  if (value == 'warning') return AnalysisSeverity.warning;
-  if (value == 'disabled') return AnalysisSeverity.disabled;
+  if (value == 'error') {
+    return AnalysisSeverity.error;
+  }
+  if (value == 'warning') {
+    return AnalysisSeverity.warning;
+  }
+  if (value == 'disabled') {
+    return AnalysisSeverity.disabled;
+  }
   return AnalysisSeverity.disabled; // Default if unknown
 }
 
@@ -35,7 +43,9 @@ class Configuration {
 /// Reads dart_skills_lint.yaml from the current directory and updates the check types.
 Future<Configuration> loadConfig(Set<CheckType> checkTypes) async {
   final configFile = File('dart_skills_lint.yaml');
-  if (!await configFile.exists()) return Configuration();
+  if (!await configFile.exists()) {
+    return Configuration();
+  }
 
   try {
     final String content = await configFile.readAsString();
