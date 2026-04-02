@@ -31,41 +31,24 @@ The `SKILL.md` file uses YAML frontmatter for machine-readable metadata, followe
 
 ### 3.2 Instructions (Markdown Body)
 The body should contain the "expert knowledge" for the agent.
-- **Tone:** Direct, technical, and procedural.
-- **Content:** Step-by-step workflows, input/output expectations, and edge case handling.
 - **Referencing:** Use relative paths to files within the skill directory (e.g., `[See technical details](references/DETAILS.md)`).
 
-## 4. Architectural Priorities
-Implementation must adhere to these three core phases to ensure context efficiency:
 
-### 4.1 Discovery Phase (Passive)
-- **Goal:** Help the agent select the right skill without overwhelming its context window.
-- **Requirement:** Only the `name` and `description` (approx. 100 tokens) should be exposed to the agent initially.
+## 4. Implementation Requirements
 
-### 4.2 Activation Phase (Active)
-- **Goal:** Provide the agent with the necessary instructions to perform the task.
-- **Requirement:** The full content of `SKILL.md` is loaded into the agent's context once the skill is explicitly activated.
-- **Constraint:** Keep `SKILL.md` under **5,000 tokens** (approx. 500 lines). Move exhaustive details to the `references/` directory.
-
-### 4.3 Execution Phase (On-Demand)
-- **Goal:** Provide deep-dive data or executable logic only when needed.
-- **Requirement:** Supplemental files in `scripts/`, `references/`, or `assets/` are only read by the agent if the instructions in `SKILL.md` direct it to do so.
-
-## 5. Implementation Requirements
-
-### 5.1 Validation
+### 4.1 Validation
 Validation ensures that a skill directory and its `SKILL.md` file adhere to the specification. A linter or validator must check the following rules:
 
-#### 5.1.1 Directory and File Structure
+#### 4.1.1 Directory and File Structure
 - **Existence**: The target path must exist and be a directory.
 - **Mandatory File**: The root directory must contain a `SKILL.md` file.
 
-#### 5.1.2 Metadata (YAML Frontmatter)
+#### 4.1.2 Metadata (YAML Frontmatter)
 - **YAML Integrity**: The frontmatter must be valid YAML.
 - **Allowed Fields**: Only the following fields are allowed: `name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`.
 - **Required Fields**: `name` and `description` are mandatory.
 
-#### 5.1.3 Field Specific Constraints
+#### 4.1.3 Field Specific Constraints
 - **Skill Name (`name`)**:
   - Must be lowercase.
   - Length: Maximum 64 characters.
@@ -89,5 +72,4 @@ Validation ensures that a skill directory and its `SKILL.md` file adhere to the 
   ```
 
 ## 6. Best Practices
-- **Atomic Skills:** Each skill should focus on a single, well-defined domain (e.g., "flutter-theming" instead of "general-flutter").
 - **Avoid Deep Nesting:** Keep the directory structure as flat as possible. References should ideally be only one level deep from the root.
