@@ -4,7 +4,6 @@
 
 import 'analysis_severity.dart';
 
-
 /// Encapsulates metadata and severity state for a specific validation rule.
 class CheckType {
   CheckType({

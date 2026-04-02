@@ -14,6 +14,7 @@ class IgnoreEntry {
     required this.fileName,
     this.used = false,
   });
+
   /// Creates an IgnoreEntry from a JSON map.
   factory IgnoreEntry.fromJson(Map<String, dynamic> json) => _$IgnoreEntryFromJson(json);
 
