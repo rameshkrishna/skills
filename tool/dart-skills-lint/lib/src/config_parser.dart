@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 import 'models/analysis_severity.dart';
-import 'models/check_type.dart';
 
 final _log = Logger('dart_skills_lint');
 
@@ -41,12 +40,13 @@ class DirectoryConfig {
 
 /// Structured configuration for the linter.
 class Configuration {
-  Configuration({this.directoryConfigs = const []});
+  Configuration({this.directoryConfigs = const [], this.configuredRules = const {}});
   final List<DirectoryConfig> directoryConfigs;
+  final Map<String, AnalysisSeverity> configuredRules;
 }
 
-/// Reads dart_skills_lint.yaml from the current directory and updates the check types.
-Future<Configuration> loadConfig(Set<CheckType> checkTypes) async {
+/// Reads dart_skills_lint.yaml from the current directory and returns the configuration.
+Future<Configuration> loadConfig() async {
   final configFile = File('dart_skills_lint.yaml');
   if (!configFile.existsSync()) {
     return Configuration();
@@ -58,13 +58,12 @@ Future<Configuration> loadConfig(Set<CheckType> checkTypes) async {
     if (yaml is YamlMap && yaml.containsKey(_dartSkillsLintKey)) {
       final toolConfig = yaml[_dartSkillsLintKey];
       if (toolConfig is YamlMap) {
+        final configuredRules = <String, AnalysisSeverity>{};
         if (toolConfig.containsKey(_rulesKey)) {
           final rules = toolConfig[_rulesKey];
           if (rules is YamlMap) {
-            for (final check in checkTypes) {
-              if (rules.containsKey(check.name)) {
-                check.severity = _parseSeverity(rules[check.name]?.toString() ?? '');
-              }
+            for (final key in rules.keys) {
+              configuredRules[key.toString()] = _parseSeverity(rules[key]?.toString() ?? '');
             }
           }
         }
@@ -92,7 +91,7 @@ Future<Configuration> loadConfig(Set<CheckType> checkTypes) async {
             }
           }
         }
-        return Configuration(directoryConfigs: directoryConfigs);
+        return Configuration(directoryConfigs: directoryConfigs, configuredRules: configuredRules);
       }
     }
   } catch (e) {

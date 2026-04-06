@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:dart_skills_lint/src/models/analysis_severity.dart';
-import 'package:dart_skills_lint/src/models/check_type.dart';
+import 'package:dart_skills_lint/src/rules.dart';
 import 'package:dart_skills_lint/src/validator.dart';
 import 'package:test/test.dart';
 
@@ -33,9 +33,8 @@ void main() {
       final Directory refDir = await Directory('${skillDir.path}/references').create();
       await File('${refDir.path}/DETAILS.md').writeAsString('Details here');
 
-      final validator = Validator(rules: {
-        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
-      });
+      final validator =
+          Validator(ruleOverrides: {relativePathsCheck.name: AnalysisSeverity.warning});
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isTrue);
@@ -48,9 +47,8 @@ void main() {
       await File('${skillDir.path}/SKILL.md').writeAsString(
           '${buildFrontmatter(name: 'test-skill')}[Link to a references file missing](references/MISSING.md)\n');
 
-      final validator = Validator(rules: {
-        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
-      });
+      final validator =
+          Validator(ruleOverrides: {relativePathsCheck.name: AnalysisSeverity.warning});
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isTrue);
@@ -62,9 +60,8 @@ void main() {
       await File('${skillDir.path}/SKILL.md').writeAsString(
           '${buildFrontmatter(name: 'test-skill')}[Absolute path link](/tmp/some_absolute_path/file.md)\n');
 
-      final validator = Validator(rules: {
-        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
-      });
+      final validator =
+          Validator(ruleOverrides: {relativePathsCheck.name: AnalysisSeverity.warning});
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isFalse);
@@ -76,9 +73,8 @@ void main() {
       await File('${skillDir.path}/SKILL.md').writeAsString(
           '${buildFrontmatter(name: 'test-skill')}- [Web link](http://example.com)\n- [Web TLS link](https://example.com)\n- [Email link](mailto:user@domain.com)\n- [JS link](javascript:alert(1))\n- [Data URI](data:image/png;base64,iVBORw)\n- [Anchor link](#section-name)\n');
 
-      final validator = Validator(rules: {
-        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
-      });
+      final validator =
+          Validator(ruleOverrides: {relativePathsCheck.name: AnalysisSeverity.warning});
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isTrue);

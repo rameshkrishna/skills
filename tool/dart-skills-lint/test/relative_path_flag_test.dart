@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:dart_skills_lint/src/models/analysis_severity.dart';
-import 'package:dart_skills_lint/src/models/check_type.dart';
+import 'package:dart_skills_lint/src/rules.dart';
 import 'package:dart_skills_lint/src/validator.dart';
 import 'package:test/test.dart';
 
@@ -31,9 +31,8 @@ void main() {
       await File('${skillDir.path}/SKILL.md').writeAsString(
           '${buildFrontmatter(name: 'test-skill')}Body with [broken link](missing.md) and [absolute link](/absolute/path.md)');
 
-      final validator = Validator(rules: {
-        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
-      });
+      final validator =
+          Validator(ruleOverrides: {relativePathsCheck.name: AnalysisSeverity.warning});
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isFalse);
@@ -49,9 +48,8 @@ void main() {
           '${buildFrontmatter(name: 'test-skill')}Body with [valid relative link](valid.md)');
       await File('${skillDir.path}/valid.md').writeAsString('Valid file content');
 
-      final validator = Validator(rules: {
-        CheckType(name: 'check-relative-paths', defaultSeverity: AnalysisSeverity.warning)
-      });
+      final validator =
+          Validator(ruleOverrides: {relativePathsCheck.name: AnalysisSeverity.warning});
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isTrue);

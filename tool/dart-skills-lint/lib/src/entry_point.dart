@@ -12,7 +12,6 @@ import 'package:path/path.dart' as p;
 
 import 'config_parser.dart';
 import 'models/analysis_severity.dart';
-import 'models/check_type.dart';
 import 'models/ignore_entry.dart';
 import 'models/skills_ignores.dart';
 import 'models/validation_error.dart';
@@ -102,16 +101,8 @@ Future<void> runApp(List<String> args) async {
     return;
   }
 
-  final Set<CheckType> checkTypes = {
-    relativePathsCheck,
-    absolutePathsCheck,
-    disallowedFieldCheck,
-    validYamlMetadataCheck,
-    descriptionTooLongCheck,
-    invalidSkillNameCheck,
-  };
   final ignoreConfig = results[_ignoreConfigFlag] as bool;
-  final Configuration config = ignoreConfig ? Configuration() : await loadConfig(checkTypes);
+  final Configuration config = ignoreConfig ? Configuration() : await loadConfig();
   if (ignoreConfig && !(results[_quietFlag] as bool)) {
     _log.info('Ignoring configuration file due to $_ignoreConfigFlag flag');
   }
@@ -139,38 +130,7 @@ Future<void> runApp(List<String> args) async {
     }
   }
 
-  if (results.wasParsed(relativePathsCheck.name)) {
-    relativePathsCheck.severity = (results[relativePathsCheck.name] as bool)
-        ? AnalysisSeverity.warning
-        : AnalysisSeverity.disabled;
-  }
-
-  if (results.wasParsed(disallowedFieldCheck.name)) {
-    disallowedFieldCheck.severity = (results[disallowedFieldCheck.name] as bool)
-        ? AnalysisSeverity.warning
-        : AnalysisSeverity.disabled;
-  }
-
-  if (results.wasParsed(validYamlMetadataCheck.name)) {
-    validYamlMetadataCheck.severity = (results[validYamlMetadataCheck.name] as bool)
-        ? validYamlMetadataCheck.defaultSeverity
-        : AnalysisSeverity.disabled;
-  }
-
-  if (results.wasParsed(descriptionTooLongCheck.name)) {
-    descriptionTooLongCheck.severity = (results[descriptionTooLongCheck.name] as bool)
-        ? descriptionTooLongCheck.defaultSeverity
-        : AnalysisSeverity.disabled;
-  }
-
-  if (results.wasParsed(invalidSkillNameCheck.name)) {
-    invalidSkillNameCheck.severity = (results[invalidSkillNameCheck.name] as bool)
-        ? invalidSkillNameCheck.defaultSeverity
-        : AnalysisSeverity.disabled;
-  }
-
-  final AnalysisSeverity relativePathsSeverity = relativePathsCheck.severity;
-  final AnalysisSeverity absolutePathsSeverity = absolutePathsCheck.severity;
+  final Map<String, AnalysisSeverity> resolvedRules = _resolveRules(results, config);
 
   final printWarnings = results[_printWarningsFlag] as bool;
   final fastFail = results[_fastFailFlag] as bool;
@@ -193,19 +153,13 @@ Future<void> runApp(List<String> args) async {
       continue;
     }
 
-    var localRelativeSeverity = relativePathsSeverity;
-    var localAbsoluteSeverity = absolutePathsSeverity;
+    final localRules = Map<String, AnalysisSeverity>.from(resolvedRules);
     String? localIgnoreFile;
 
     for (final DirectoryConfig dirConfig in config.directoryConfigs) {
       final String normalizedConfigPath = p.normalize(dirConfig.path);
       if (normalizedSkillPath.startsWith(normalizedConfigPath)) {
-        if (dirConfig.rules.containsKey('check-relative-paths')) {
-          localRelativeSeverity = dirConfig.rules['check-relative-paths']!;
-        }
-        if (dirConfig.rules.containsKey('check-absolute-paths')) {
-          localAbsoluteSeverity = dirConfig.rules['check-absolute-paths']!;
-        }
+        localRules.addAll(dirConfig.rules);
         localIgnoreFile = dirConfig.ignoreFile;
         break;
       }
@@ -215,11 +169,7 @@ Future<void> runApp(List<String> args) async {
       localIgnoreFile = results[_ignoreFileOption] as String?;
     }
 
-    final localRules = <CheckType>{
-      CheckType(name: relativePathsCheck.name, defaultSeverity: localRelativeSeverity),
-      CheckType(name: absolutePathsCheck.name, defaultSeverity: localAbsoluteSeverity),
-    };
-    final validator = Validator(rules: localRules);
+    final validator = Validator(ruleOverrides: localRules);
 
     final Map<String, List<IgnoreEntry>> ignoresMap =
         await _loadIgnores(localIgnoreFile, skillDir.parent);
@@ -271,19 +221,13 @@ Future<void> runApp(List<String> args) async {
       continue;
     }
 
-    var localRelativeSeverity = relativePathsSeverity;
-    var localAbsoluteSeverity = absolutePathsSeverity;
+    final localRules = Map<String, AnalysisSeverity>.from(resolvedRules);
     String? localIgnoreFile;
 
     for (final DirectoryConfig dirConfig in config.directoryConfigs) {
       final String normalizedConfigPath = p.normalize(dirConfig.path);
       if (normalizedRootPath.startsWith(normalizedConfigPath)) {
-        if (dirConfig.rules.containsKey('check-relative-paths')) {
-          localRelativeSeverity = dirConfig.rules['check-relative-paths']!;
-        }
-        if (dirConfig.rules.containsKey('check-absolute-paths')) {
-          localAbsoluteSeverity = dirConfig.rules['check-absolute-paths']!;
-        }
+        localRules.addAll(dirConfig.rules);
         localIgnoreFile = dirConfig.ignoreFile;
         break;
       }
@@ -293,11 +237,7 @@ Future<void> runApp(List<String> args) async {
       localIgnoreFile = results[_ignoreFileOption] as String?;
     }
 
-    final localRules = <CheckType>{
-      CheckType(name: relativePathsCheck.name, defaultSeverity: localRelativeSeverity),
-      CheckType(name: absolutePathsCheck.name, defaultSeverity: localAbsoluteSeverity),
-    };
-    final validator = Validator(rules: localRules);
+    final validator = Validator(ruleOverrides: localRules);
 
     List<FileSystemEntity> entities;
     try {
@@ -376,6 +316,48 @@ Future<void> runApp(List<String> args) async {
   }
 
   exitCode = globalAnyFailed ? 1 : 0;
+}
+
+Map<String, AnalysisSeverity> _resolveRules(ArgResults results, Configuration config) {
+  final resolved = <String, AnalysisSeverity>{};
+
+  resolved[relativePathsCheck.name] = relativePathsCheck.defaultSeverity;
+  resolved[absolutePathsCheck.name] = absolutePathsCheck.defaultSeverity;
+  resolved[disallowedFieldCheck.name] = disallowedFieldCheck.defaultSeverity;
+  resolved[validYamlMetadataCheck.name] = validYamlMetadataCheck.defaultSeverity;
+  resolved[descriptionTooLongCheck.name] = descriptionTooLongCheck.defaultSeverity;
+  resolved[invalidSkillNameCheck.name] = invalidSkillNameCheck.defaultSeverity;
+  resolved[pathDoesNotExistCheck.name] = pathDoesNotExistCheck.defaultSeverity;
+
+  resolved.addAll(config.configuredRules);
+
+  if (results.wasParsed(relativePathsCheck.name)) {
+    resolved[relativePathsCheck.name] = (results[relativePathsCheck.name] as bool)
+        ? AnalysisSeverity.warning
+        : AnalysisSeverity.disabled;
+  }
+  if (results.wasParsed(disallowedFieldCheck.name)) {
+    resolved[disallowedFieldCheck.name] = (results[disallowedFieldCheck.name] as bool)
+        ? AnalysisSeverity.warning
+        : AnalysisSeverity.disabled;
+  }
+  if (results.wasParsed(validYamlMetadataCheck.name)) {
+    resolved[validYamlMetadataCheck.name] = (results[validYamlMetadataCheck.name] as bool)
+        ? validYamlMetadataCheck.defaultSeverity
+        : AnalysisSeverity.disabled;
+  }
+  if (results.wasParsed(descriptionTooLongCheck.name)) {
+    resolved[descriptionTooLongCheck.name] = (results[descriptionTooLongCheck.name] as bool)
+        ? descriptionTooLongCheck.defaultSeverity
+        : AnalysisSeverity.disabled;
+  }
+  if (results.wasParsed(invalidSkillNameCheck.name)) {
+    resolved[invalidSkillNameCheck.name] = (results[invalidSkillNameCheck.name] as bool)
+        ? invalidSkillNameCheck.defaultSeverity
+        : AnalysisSeverity.disabled;
+  }
+
+  return resolved;
 }
 
 Future<Map<String, List<IgnoreEntry>>> _loadIgnores(
