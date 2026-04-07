@@ -23,7 +23,7 @@ void main() {
     test('returns defaults when no args and empty config', () {
       final ArgResults results = createParser().parse([]);
       final config = Configuration();
-      
+
       final Map<String, AnalysisSeverity> resolved = resolveRules(results, config);
 
       expect(resolved[relativePathsCheck.name], relativePathsCheck.defaultSeverity);
@@ -41,7 +41,7 @@ void main() {
         relativePathsCheck.name: AnalysisSeverity.error,
         absolutePathsCheck.name: AnalysisSeverity.warning,
       });
-      
+
       final Map<String, AnalysisSeverity> resolved = resolveRules(results, config);
 
       expect(resolved[relativePathsCheck.name], AnalysisSeverity.error);
@@ -55,7 +55,7 @@ void main() {
       final config = Configuration(configuredRules: {
         relativePathsCheck.name: AnalysisSeverity.error,
       });
-      
+
       final Map<String, AnalysisSeverity> resolved = resolveRules(results, config);
 
       expect(resolved[relativePathsCheck.name], AnalysisSeverity.warning);
@@ -66,7 +66,7 @@ void main() {
       final config = Configuration(configuredRules: {
         validYamlMetadataCheck.name: AnalysisSeverity.warning,
       });
-      
+
       final Map<String, AnalysisSeverity> resolved = resolveRules(results, config);
 
       expect(resolved[validYamlMetadataCheck.name], AnalysisSeverity.disabled);
