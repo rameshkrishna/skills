@@ -1,7 +1,7 @@
 # Production Readiness Evaluation: `dart-skills-lint`
 
 ## Executive Summary
-`dart-skills-lint` is a well-structured Dart CLI tool designed to enforce the Agent Skills specification. It demonstrates solid engineering fundamentals, including a decoupled architecture, comprehensive testing, and adherence to Dart CLI best practices. However, while the core logic is robust, it lacks several critical "production-grade" features required for broad ecosystem adoption and enterprise-level CI/CD integration.
+`dart_skills_lint` is a well-structured Dart CLI tool designed to enforce the Agent Skills specification. It demonstrates solid engineering fundamentals, including a decoupled architecture, comprehensive testing, and adherence to Dart CLI best practices. However, while the core logic is robust, it lacks several critical "production-grade" features required for broad ecosystem adoption and enterprise-level CI/CD integration.
 
 **Current Status:** **Beta / Tooling Candidate**
 *Suitable for internal use by Dart-savvy teams, but not yet ready for a broad, multi-language developer audience.*
@@ -17,7 +17,7 @@
 - **Configuration:** Initial support for `dart_skills_lint.yaml` allows for some flexibility in rule enforcement (error vs. warning).
 
 ### 2. Required Features Missing (Gaps)
-- **Distribution & Portability:** 
+- **Distribution & Portability:**
     - No pre-compiled binaries. Users are forced to have a Dart SDK installed, which is a barrier for non-Dart developers (e.g., Python or JS agent creators).
     - Not yet published to `pub.dev`.
 - **Machine-Readable Output:** The tool only outputs human-readable logs. Production CI/CD pipelines often require JSON, SARIF, or JUnit XML formats for automated reporting and dashboarding.

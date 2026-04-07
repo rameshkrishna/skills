@@ -1,6 +1,6 @@
 ---
 name: add-dart-lint-validation-rule
-description: Instructions for adding a new validation rule and CLI flag to dart-skills-lint.
+description: Instructions for adding a new validation rule and CLI flag to dart_skills_lint.
 ---
 
 # Add a New Validation Rule and Flag
@@ -100,10 +100,10 @@ test('triggers error when description does not end with period', () async {
     name: 'test-skill',
     description: 'This description does not end with a period',
   );
-  
+
   final validator = Validator(rules: {descriptionTrailingPeriodCheck});
   final result = await validator.validate(tempDir);
-  
+
   expect(result.validationErrors.any((e) => e.ruleId == 'description-trailing-period'), isTrue);
 });
 test('skips error when description ends with period', () async {
@@ -111,10 +111,10 @@ test('skips error when description ends with period', () async {
     name: 'test-skill',
     description: 'This description ends with a period.',
   );
-  
+
   final validator = Validator(rules: {descriptionTrailingPeriodCheck});
   final result = await validator.validate(tempDir);
-  
+
   expect(result.validationErrors.any((e) => e.ruleId == 'description-trailing-period'), isFalse);
 });
 ```
@@ -125,10 +125,10 @@ test('skips error when description ends with period', () async {
 
 When a new rule is introduced, verify that you synchronize sibling markdown files!
 
-1.  **`README.md`:** 
+1.  **`README.md`:**
     *   Add your flag under the **Usage** and **Flags** sections so users know it exists.
     *   Add descriptive lines under **Specification Validation**.
-2.  **`documentation/knowledge/SPECIFICATION.md`:** 
+2.  **`documentation/knowledge/SPECIFICATION.md`:**
     *   If the rule implements standard specifications traits, add constraints parameters under Section 5.1 (Validation parameters).
 
 ---
