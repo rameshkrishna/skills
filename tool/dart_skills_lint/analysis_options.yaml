@@ -9,9 +9,6 @@
 #
 #   - analysis_options.yaml (this file)
 #   - https://github.com/flutter/packages/blob/main/analysis_options.yaml
-#
-# This file contains the analysis options used for code in the flutter/flutter
-# repository.
 
 analyzer:
   language:

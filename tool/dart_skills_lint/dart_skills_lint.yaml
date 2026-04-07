@@ -1,6 +1,7 @@
 dart_skills_lint:
   rules:
     check-relative-paths: error
+    check-absolute-paths: error
   directories:
     - path: ".agents/skills"
       ignore_file: ".agents/skills/ignore.json"

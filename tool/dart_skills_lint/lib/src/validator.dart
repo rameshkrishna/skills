@@ -55,8 +55,6 @@ class Validator {
     return _ruleOverrides[rule.name] ?? rule.defaultSeverity;
   }
 
-
-
   static const _nameField = 'name';
   static const _descriptionField = 'description';
   static const _licenseField = 'license';

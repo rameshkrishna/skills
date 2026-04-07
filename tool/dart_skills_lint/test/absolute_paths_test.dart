@@ -35,8 +35,8 @@ void main() {
       final ValidationResult result = await validator.validate(skillDir);
 
       expect(result.isValid, isTrue);
-      expect(
-          result.warnings, contains(contains('Absolute filepath found in link: /absolute/path.md')));
+      expect(result.warnings,
+          contains(contains('Absolute filepath found in link: /absolute/path.md')));
     });
 
     test('flags windows absolute path starting with drive letter as error', () async {
