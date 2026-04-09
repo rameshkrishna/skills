@@ -1,0 +1,55 @@
+import 'package:yaml/yaml.dart';
+import '../models/analysis_severity.dart';
+import '../models/skill_context.dart';
+import '../models/skill_rule.dart';
+import '../models/validation_error.dart';
+
+/// Enforces that only allowed fields are present in YAML metadata.
+class DisallowedFieldRule extends SkillRule {
+  DisallowedFieldRule({this.severity = AnalysisSeverity.warning});
+
+  @override
+  final String name = 'disallowed-field';
+
+  @override
+  final AnalysisSeverity severity;
+
+  static const _allowedFields = {
+    'name',
+    'description',
+    'license',
+    'allowed-tools',
+    'metadata',
+    'compatibility',
+    'category',
+    'tags',
+    'version',
+    'eval_task',
+  };
+
+  static const _skillFileName = 'SKILL.md';
+  static const _metadataUrl = 'https://github.com/flutter/skills#metadata';
+
+  @override
+  Future<List<ValidationError>> validate(SkillContext context) async {
+    final errors = <ValidationError>[];
+
+    if (context.parsedYaml == null) {
+      return errors;
+    }
+
+    final YamlMap yaml = context.parsedYaml!;
+    for (final Object key in yaml.keys.cast<Object>()) {
+      if (!_allowedFields.contains(key)) {
+        errors.add(ValidationError(
+          ruleId: name,
+          severity: severity,
+          file: _skillFileName,
+          message: 'Disallowed field: $key (see $_metadataUrl)',
+        ));
+      }
+    }
+
+    return errors;
+  }
+}
