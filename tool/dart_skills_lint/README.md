@@ -45,10 +45,11 @@ dart pub global activate dart_skills_lint
 
 ## Usage
 
-Run the linter against your skills or root skills directories.
+There are three ways to interact with `dart_skills_lint`:
 
-### Project Usage
-If installed as a dev_dependency:
+### 1. As a Command Line Tool with Arguments
+Run the linter against your skills or root skills directories by passing arguments.
+
 ```bash
 dart run dart_skills_lint --skills-directory ./path/to/skills-root
 ```
@@ -73,21 +74,60 @@ If no directory is specified, it automatically checks `.claude/skills` and `.age
 - `--fast-fail`: Halt execution immediately on the error.
 - `--ignore-config`: Ignore the YAML configuration file entirely.
 
-## Configuration
+### 2. As a Command Line Tool with a YAML Configuration File
+You can configure the linter using a configuration file (defaulting to `dart_skills_lint.yaml` in the current directory).
 
-You can configure the linter using a configuration file (defaulting to `dart_skills_lint.yaml`).
-
-### Example `dart_skills_lint.yaml`
-Create this file in the root of your repository:
+Create `dart_skills_lint.yaml` in the root of your repository:
 
 ```yaml
 # dart_skills_lint.yaml
 dart_skills_lint:
   rules:
-    no-unresolved-relative-paths: error
-    valid-yaml-metadata: error
-    flat-directory-structure: warning # Can override to warning instead of error
+    check-relative-paths: error
+    check-absolute-paths: error
+  directories:
+    - path: "~/.agents/skills"
+      ignore_file: "~/.agents/skills/ignore.json"
 ```
+
+Then you can simply run:
+```bash
+dart run dart_skills_lint
+```
+
+### 3. As Dart Test Code
+You can integrate the linter into your automated tests by importing the package and calling `validateSkills`. This allows you to enforce skill validity as part of your standard test suite.
+
+Example `test/lint_skills_test.dart`:
+```dart
+import 'package:dart_skills_lint/dart_skills_lint.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('Run skills linter', () async {
+    final config = Configuration(
+      directoryConfigs: [
+        DirectoryConfig(
+          path: '../../skills',
+          rules: {},
+          ignoreFile: '.agents/skills/flutter_skills_ignore.json',
+        ),
+      ],
+    );
+
+    await validateSkills(
+      skillDirPaths: ['../../skills'],
+      resolvedRules: {
+        'check-relative-paths': AnalysisSeverity.error,
+        'check-absolute-paths': AnalysisSeverity.error,
+      },
+      config: config,
+    );
+  });
+}
+```
+
+You can also use `Validator` and `ValidationResult` directly if you need to inspect the errors programmatically.
 
 ## Specification Validation
 
@@ -100,7 +140,7 @@ The linter checks against the criteria defined in `documentation/knowledge/SPECI
 
 ### 2. Metadata (YAML Frontmatter)
 - Valid YAML syntax.
-- Allowed fields: `name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`.
+- Allowed fields: `name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`, `category`, `tags`, `version`, `eval_task`.
 - Required fields: `name` and `description`.
 
 ### 3. Field Specific Constraints
