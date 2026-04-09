@@ -135,7 +135,53 @@ Future<void> runApp(List<String> args) async {
   final printWarnings = results[_printWarningsFlag] as bool;
   final fastFail = results[_fastFailFlag] as bool;
   final quiet = results[_quietFlag] as bool;
+  final generateBaseline = results[_generateBaselineFlag] as bool;
 
+  String? ignoreFileOverride;
+  if (results.wasParsed(_ignoreFileOption)) {
+    ignoreFileOverride = results[_ignoreFileOption] as String?;
+  }
+
+  final bool success = await validateSkills(
+    skillDirPaths: skillDirPaths,
+    individualSkillPaths: individualSkillPaths,
+    resolvedRules: resolvedRules,
+    printWarnings: printWarnings,
+    fastFail: fastFail,
+    quiet: quiet,
+    generateBaseline: generateBaseline,
+    ignoreFileOverride: ignoreFileOverride,
+    config: config,
+  );
+
+  exitCode = success ? 0 : 1;
+}
+
+/// Validates skills based on the provided configuration.
+///
+/// [skillDirPaths] is a list of directories containing multiple skills.
+/// [individualSkillPaths] is a list of paths to individual skill directories.
+/// [resolvedRules] is a map of rule names to their severity overrides.
+/// [printWarnings] controls whether to print validation warnings.
+/// [fastFail] causes validation to stop on the first error.
+/// [quiet] suppresses non-error/warning output.
+/// [generateBaseline] writes current errors to a baseline file instead of reporting them.
+/// [ignoreFileOverride] is an optional path to a baseline file to use.
+/// [config] is the loaded configuration.
+///
+/// Returns `true` if all validations passed (or if generating a baseline), `false` otherwise.
+Future<bool> validateSkills({
+  List<String> skillDirPaths = const [],
+  List<String> individualSkillPaths = const [],
+  Map<String, AnalysisSeverity> resolvedRules = const {},
+  bool printWarnings = true,
+  bool fastFail = false,
+  bool quiet = false,
+  bool generateBaseline = false,
+  String? ignoreFileOverride,
+  Configuration? config,
+}) async {
+  config ??= Configuration();
   var globalAnyFailed = false;
   var anySkillsValidated = false;
 
@@ -165,8 +211,8 @@ Future<void> runApp(List<String> args) async {
       }
     }
 
-    if (results.wasParsed(_ignoreFileOption)) {
-      localIgnoreFile = results[_ignoreFileOption] as String?;
+    if (ignoreFileOverride != null) {
+      localIgnoreFile = ignoreFileOverride;
     }
 
     final validator = Validator(ruleOverrides: localRules);
@@ -185,11 +231,11 @@ Future<void> runApp(List<String> args) async {
       quiet: quiet,
     );
 
-    if (results.wasParsed(_generateBaselineFlag)) {
+    if (generateBaseline) {
       await _generateBaselineFile(result, localIgnoreFile, skillDir, skillDir);
     }
 
-    if (!results.wasParsed(_generateBaselineFlag)) {
+    if (!generateBaseline) {
       final String fullPath = p.absolute(skillDir.path);
       for (final ignore in skillIgnores) {
         if (!ignore.used) {
@@ -233,8 +279,8 @@ Future<void> runApp(List<String> args) async {
       }
     }
 
-    if (results.wasParsed(_ignoreFileOption)) {
-      localIgnoreFile = results[_ignoreFileOption] as String?;
+    if (ignoreFileOverride != null) {
+      localIgnoreFile = ignoreFileOverride;
     }
 
     final validator = Validator(ruleOverrides: localRules);
@@ -266,7 +312,7 @@ Future<void> runApp(List<String> args) async {
           quiet: quiet,
         );
 
-        if (results.wasParsed(_generateBaselineFlag)) {
+        if (generateBaseline) {
           await _generateBaselineFile(result, localIgnoreFile, rootDir, entity);
         }
 
@@ -279,7 +325,7 @@ Future<void> runApp(List<String> args) async {
       }
     }
 
-    if (!results.wasParsed(_generateBaselineFlag)) {
+    if (!generateBaseline) {
       for (final MapEntry<String, List<IgnoreEntry>> entry in ignoresMap.entries) {
         final String skillName = entry.key;
         for (final IgnoreEntry ignore in entry.value) {
@@ -314,11 +360,11 @@ Future<void> runApp(List<String> args) async {
     globalAnyFailed = true;
   }
 
-  if (results.wasParsed(_generateBaselineFlag)) {
+  if (generateBaseline) {
     globalAnyFailed = false;
   }
 
-  exitCode = globalAnyFailed ? 1 : 0;
+  return !globalAnyFailed;
 }
 
 @visibleForTesting
