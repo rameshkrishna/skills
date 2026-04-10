@@ -92,12 +92,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        [
-          p.normalize(p.absolute('bin/cli.dart')),
-          '-s',
-          'test-skill',
-          '--check-relative-paths'
-        ],
+        [p.normalize(p.absolute('bin/cli.dart')), '-s', 'test-skill', '--check-relative-paths'],
         workingDirectory: tempDir.path,
       );
 
@@ -166,12 +161,7 @@ dart_skills_lint:
       // 2. Run with --ignore-config. Should fail because config is ignored and default is used.
       final TestProcess failProcess = await TestProcess.start(
         'dart',
-        [
-          p.normalize(p.absolute('bin/cli.dart')),
-          '-s',
-          'TEST-SKILL',
-          '--ignore-config'
-        ],
+        [p.normalize(p.absolute('bin/cli.dart')), '-s', 'TEST-SKILL', '--ignore-config'],
         workingDirectory: tempDir.path,
       );
       await failProcess.shouldExit(1);

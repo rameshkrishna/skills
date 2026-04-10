@@ -82,12 +82,7 @@ dart_skills_lint:
       // 1. Run with --generate-baseline. It should evaluate all skills and write both to the baseline!
       final TestProcess genProcess = await TestProcess.start(
         'dart',
-        [
-          p.normalize(p.absolute('bin/cli.dart')),
-          '-d',
-          'skills',
-          '--generate-baseline'
-        ],
+        [p.normalize(p.absolute('bin/cli.dart')), '-d', 'skills', '--generate-baseline'],
         workingDirectory: tempDir.path,
       );
       await genProcess.shouldExit(0); // Exits 0 if --generate-baseline is passed
