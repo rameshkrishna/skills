@@ -39,7 +39,7 @@ void main() {
       // Run with --generate-baseline
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillDir.path, '--generate-baseline'],
+        ['bin/cli.dart', '-s', skillDir.path, '--generate-baseline'],
       );
       await process.shouldExit(0);
 
@@ -83,7 +83,7 @@ dart_skills_lint:
       final TestProcess genProcess = await TestProcess.start(
         'dart',
         [
-          p.normalize(p.absolute('bin/dart_skills_lint.dart')),
+          p.normalize(p.absolute('bin/cli.dart')),
           '-d',
           'skills',
           '--generate-baseline'
@@ -105,7 +105,7 @@ dart_skills_lint:
       // 2. Run again silently. It should succeed with exit 0 because all errors are ignored!
       final TestProcess runProcess = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart')), '-d', 'skills', '-q'],
+        [p.normalize(p.absolute('bin/cli.dart')), '-d', 'skills', '-q'],
         workingDirectory: tempDir.path,
       );
       await runProcess.shouldExit(0);
@@ -118,7 +118,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillDir.path],
+        ['bin/cli.dart', '-s', skillDir.path],
       );
 
       final List<String> stdout = await process.stdout.rest.toList();
@@ -132,7 +132,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillDir.path],
+        ['bin/cli.dart', '-s', skillDir.path],
       );
 
       final List<String> stderr = await process.stderr.rest.toList();
@@ -154,7 +154,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-d', skillsDir.path],
+        ['bin/cli.dart', '-d', skillsDir.path],
       );
 
       // Verify outputs for both skills (sorted order)
@@ -180,7 +180,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-d', skillsDir.path],
+        ['bin/cli.dart', '-d', skillsDir.path],
       );
 
       final List<String> stdout = await process.stdout.rest.toList();
@@ -202,7 +202,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-d', skillsDir.path],
+        ['bin/cli.dart', '-d', skillsDir.path],
       );
 
       // Verify outputs
@@ -229,7 +229,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-d', skillsDir.path, '--fast-fail'],
+        ['bin/cli.dart', '-d', skillsDir.path, '--fast-fail'],
       );
 
       // Verify outputs for skill-a
@@ -252,7 +252,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillDir.path, '--quiet'],
+        ['bin/cli.dart', '-s', skillDir.path, '--quiet'],
       );
 
       await process.shouldExit(0);
@@ -264,7 +264,7 @@ dart_skills_lint:
     test('fails with 64 when no flags passed and both defaults are missing', () async {
       final TestProcess process = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart'))],
+        [p.normalize(p.absolute('bin/cli.dart'))],
         workingDirectory: tempDir.path,
       );
 
@@ -282,7 +282,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart'))],
+        [p.normalize(p.absolute('bin/cli.dart'))],
         workingDirectory: tempDir.path,
       );
 
@@ -297,7 +297,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart')), '-s', '~/some-skill'],
+        [p.normalize(p.absolute('bin/cli.dart')), '-s', '~/some-skill'],
         environment: {'HOME': tempDir.path},
       );
 
@@ -313,14 +313,14 @@ dart_skills_lint:
       // 1. Run normally. Should fail because valid-yaml-metadata defaults to true (error).
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillDir.path],
+        ['bin/cli.dart', '-s', skillDir.path],
       );
       await process.shouldExit(1);
 
       // 2. Run with --no-valid-yaml-metadata. Should pass because the check is disabled!
       final TestProcess noYamlProcess = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillDir.path, '--no-valid-yaml-metadata'],
+        ['bin/cli.dart', '-s', skillDir.path, '--no-valid-yaml-metadata'],
       );
       await noYamlProcess.shouldExit(0);
     });
@@ -330,7 +330,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-d', emptyDir.path],
+        ['bin/cli.dart', '-d', emptyDir.path],
       );
 
       await process.shouldExit(1);
@@ -346,7 +346,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-d', skillAsRoot.path],
+        ['bin/cli.dart', '-d', skillAsRoot.path],
       );
 
       await process.shouldExit(1);
@@ -368,7 +368,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skill1.path, '-s', skill2.path],
+        ['bin/cli.dart', '-s', skill1.path, '-s', skill2.path],
       );
 
       await process.shouldExit(0);
@@ -388,7 +388,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        ['bin/dart_skills_lint.dart', '-s', skillFolder.path, '--ignore-file', malformedFile.path],
+        ['bin/cli.dart', '-s', skillFolder.path, '--ignore-file', malformedFile.path],
       );
 
       await process.shouldExit(0); // Valid skill should still pass
@@ -399,7 +399,7 @@ dart_skills_lint:
     test('CLI help displays all registered rules', () async {
       final TestProcess process = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart')), '--help'],
+        [p.normalize(p.absolute('bin/cli.dart')), '--help'],
       );
       await process.shouldExit(0);
       final List<String> stdout = await process.stdout.rest.toList();
@@ -413,7 +413,7 @@ dart_skills_lint:
     test('CLI help does not display path-does-not-exist', () async {
       final TestProcess process = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart')), '--help'],
+        [p.normalize(p.absolute('bin/cli.dart')), '--help'],
       );
       await process.shouldExit(0);
       final List<String> stdout = await process.stdout.rest.toList();
@@ -456,7 +456,7 @@ dart_skills_lint:
 
       final TestProcess process = await TestProcess.start(
         'dart',
-        [p.normalize(p.absolute('bin/dart_skills_lint.dart')), '-d', 'skills'],
+        [p.normalize(p.absolute('bin/cli.dart')), '-d', 'skills'],
         workingDirectory: tempDir.path,
       );
 
