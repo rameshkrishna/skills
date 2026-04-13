@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:dart_skills_lint/src/validator.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 void main() {
@@ -48,10 +49,44 @@ void main() {
       expect(result.errors, contains(contains('SKILL.md is missing')));
     });
 
-    test('passes if directory exists and contains SKILL.md', () async {
-      final skillDir = Directory('${tempDir.path}/test-skill');
+    test('fails if SKILL.md cannot be read', () async {
+      final skillDir = Directory(p.join(tempDir.path, 'test-skill-inaccessible'));
       await skillDir.create();
-      await File('${skillDir.path}/SKILL.md').writeAsString('''
+      final file = File(p.join(skillDir.path, 'SKILL.md'));
+      await file.create();
+
+      // Remove read permissions
+      ProcessResult result;
+      if (Platform.isWindows) {
+        result = await Process.run('icacls', [file.path, '/deny', 'Everyone:(R)']);
+      } else {
+        result = await Process.run('chmod', ['-r', file.path]);
+      }
+
+      if (result.exitCode != 0) {
+        fail('Failed to change file permissions: ${result.stderr}');
+      }
+
+      final validator = Validator();
+      final ValidationResult validationResult = await validator.validate(skillDir);
+
+      expect(validationResult.isValid, isFalse);
+      expect(
+          validationResult.validationErrors.any((e) => e.ruleId == Validator.skillFileInaccessible),
+          isTrue);
+
+      // Restore permissions so cleanup can delete it
+      if (Platform.isWindows) {
+        await Process.run('icacls', [file.path, '/remove:d', 'Everyone']);
+      } else {
+        await Process.run('chmod', ['+r', file.path]);
+      }
+    });
+
+    test('passes if directory exists and contains SKILL.md', () async {
+      final skillDir = Directory(p.join(tempDir.path, 'test-skill'));
+      await skillDir.create();
+      await File(p.join(skillDir.path, 'SKILL.md')).writeAsString('''
 ---
 name: test-skill
 description: A test skill
