@@ -523,7 +523,7 @@ dart_skills_lint:
       final List<String> stdout = await process.stdout.rest.toList();
       expect(stdout.join('\n'), contains('Applied fixes for test-skill'));
 
-      await process.shouldExit(1);
+      await process.shouldExit(0);
 
       // Verify file was modified
       final String content = await File('${skillDir.path}/SKILL.md').readAsString();

@@ -118,7 +118,7 @@ Body''');
         final context =
             SkillContext(directory: skillDir, rawContent: content, parsedYaml: parsedYaml);
 
-        final String fixedContent = await rule.fix('SKILL.md', content, context);
+        final String fixedContent = await rule.fix('SKILL.md', content, context.directory);
 
         expect(fixedContent, contains('name: my_skill'));
       });

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart';
-import '../fixer.dart';
+import '../fixable_rule.dart';
 import '../models/analysis_severity.dart';
 import '../models/skill_context.dart';
 import '../models/skill_rule.dart';
@@ -20,7 +20,7 @@ class AbsolutePathsRule extends SkillRule implements FixableRule {
   final AnalysisSeverity severity;
 
   static final _markdownLinkRegex = RegExp(r'\[.*?\]\((.*?)\)');
-  static const _skillFileName = 'SKILL.md';
+  static const String _skillFileName = SkillContext.skillFileName;
 
   @override
   Future<List<ValidationError>> validate(SkillContext context) async {
@@ -48,8 +48,8 @@ class AbsolutePathsRule extends SkillRule implements FixableRule {
   }
 
   @override
-  Future<String> fix(String filePath, String currentContent, SkillContext context) async {
-    if (filePath != 'SKILL.md') {
+  Future<String> fix(String filePath, String currentContent, Directory directory) async {
+    if (filePath != SkillContext.skillFileName) {
       return currentContent;
     }
 
@@ -61,7 +61,7 @@ class AbsolutePathsRule extends SkillRule implements FixableRule {
       if (isAbsolute(path) || windows.isAbsolute(path)) {
         final file = File(path);
         if (file.existsSync()) {
-          final String relativePath = relative(path, from: context.directory.path);
+          final String relativePath = relative(path, from: directory.path);
           updatedContent = updatedContent.replaceAll('($path)', '($relativePath)');
         }
       }

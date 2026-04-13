@@ -123,7 +123,7 @@ void main() {
       final String content = await file.readAsString();
       final context = SkillContext(directory: skillDir, rawContent: content);
 
-      final String fixedContent = await rule.fix('SKILL.md', content, context);
+      final String fixedContent = await rule.fix('SKILL.md', content, context.directory);
 
       expect(fixedContent, contains('(../target.md)'));
     });
@@ -139,7 +139,7 @@ void main() {
       final String content = await file.readAsString();
       final context = SkillContext(directory: skillDir, rawContent: content);
 
-      final String fixedContent = await rule.fix('SKILL.md', content, context);
+      final String fixedContent = await rule.fix('SKILL.md', content, context.directory);
 
       expect(fixedContent, contains('(/non/existent/file.md)'));
     });

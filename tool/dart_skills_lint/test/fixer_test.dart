@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:dart_skills_lint/src/entry_point.dart';
-import 'package:dart_skills_lint/src/fixer.dart';
+import 'package:dart_skills_lint/src/fixable_rule.dart';
 import 'package:dart_skills_lint/src/models/analysis_severity.dart';
 import 'package:dart_skills_lint/src/models/skill_context.dart';
 import 'package:dart_skills_lint/src/models/skill_rule.dart';
@@ -33,7 +33,7 @@ class RuleA extends SkillRule implements FixableRule {
   }
 
   @override
-  Future<String> fix(String filePath, String currentContent, SkillContext context) async {
+  Future<String> fix(String filePath, String currentContent, Directory directory) async {
     return '$currentContent A';
   }
 }
@@ -58,7 +58,7 @@ class RuleB extends SkillRule implements FixableRule {
   }
 
   @override
-  Future<String> fix(String filePath, String currentContent, SkillContext context) async {
+  Future<String> fix(String filePath, String currentContent, Directory directory) async {
     return '$currentContent B';
   }
 }
@@ -83,7 +83,7 @@ class RuleThrows extends SkillRule implements FixableRule {
   }
 
   @override
-  Future<String> fix(String filePath, String currentContent, SkillContext context) async {
+  Future<String> fix(String filePath, String currentContent, Directory directory) async {
     throw Exception('Fix failed');
   }
 }

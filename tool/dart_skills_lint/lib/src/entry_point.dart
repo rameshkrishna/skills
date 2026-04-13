@@ -11,7 +11,7 @@ import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
 import 'config_parser.dart';
-import 'fixer.dart';
+import 'fixable_rule.dart';
 import 'models/analysis_severity.dart';
 import 'models/check_type.dart';
 import 'models/ignore_entry.dart';
@@ -275,18 +275,18 @@ Future<bool> validateSkillsInternal({
       quiet: quiet,
     );
 
-    await _applyFixesIfNeeded(
+    final ValidationResult finalResult = await _applyFixesIfNeeded(
       skillDir: skillDir,
       result: result,
-      localRules: localRules,
-      customRules: customRules,
+      validator: validator,
+      skillIgnores: skillIgnores,
       fix: fix,
       fixApply: fixApply,
       quiet: quiet,
     );
 
     if (generateBaseline) {
-      await _generateBaselineFile(result, localIgnoreFile, skillDir, skillDir);
+      await _generateBaselineFile(finalResult, localIgnoreFile, skillDir, skillDir);
     }
 
     if (!generateBaseline) {
@@ -299,7 +299,7 @@ Future<bool> validateSkillsInternal({
       }
     }
 
-    if (!result.isValid) {
+    if (!finalResult.isValid) {
       globalAnyFailed = true;
       if (fastFail) {
         break;
@@ -358,21 +358,21 @@ Future<bool> validateSkillsInternal({
           quiet: quiet,
         );
 
-        await _applyFixesIfNeeded(
+        final ValidationResult finalResult = await _applyFixesIfNeeded(
           skillDir: entity,
           result: result,
-          localRules: localRules,
-          customRules: customRules,
+          validator: validator,
+          skillIgnores: ignoresMap[p.basename(entity.path)] ?? [],
           fix: fix,
           fixApply: fixApply,
           quiet: quiet,
         );
 
         if (generateBaseline) {
-          await _generateBaselineFile(result, localIgnoreFile, rootDir, entity);
+          await _generateBaselineFile(finalResult, localIgnoreFile, rootDir, entity);
         }
 
-        if (!result.isValid) {
+        if (!finalResult.isValid) {
           globalAnyFailed = true;
           if (fastFail) {
             break;
@@ -403,7 +403,7 @@ Future<bool> validateSkillsInternal({
     var foundSingleSkillPassedToD = false;
     for (final rootPath in skillDirPaths) {
       final String expandedRootPath = _expandPath(rootPath);
-      final skillMdFile = File(p.join(expandedRootPath, 'SKILL.md'));
+      final skillMdFile = File(p.join(expandedRootPath, SkillContext.skillFileName));
       if (skillMdFile.existsSync()) {
         _log.severe(
             'Directory "$expandedRootPath" appears to be an individual skill. Use --skill / -s instead of -d / --skills-directory.');
@@ -547,52 +547,42 @@ Future<ValidationResult> _validateSingleSkill({
   return result;
 }
 
-Future<void> _applyFixesIfNeeded({
+Future<ValidationResult> _applyFixesIfNeeded({
   required Directory skillDir,
   required ValidationResult result,
-  required Map<String, AnalysisSeverity> localRules,
-  required List<SkillRule> customRules,
+  required Validator validator,
+  required List<IgnoreEntry> skillIgnores,
   required bool fix,
   required bool fixApply,
   required bool quiet,
 }) async {
   if (!fix && !fixApply) {
-    return;
+    return result;
   }
 
   final SkillContext? context = result.context;
   if (context == null) {
-    return;
+    return result;
   }
 
   final String skillName = p.basename(skillDir.path);
-  final skillMdFile = File(p.join(skillDir.path, 'SKILL.md'));
+  final skillMdFile = File(p.join(skillDir.path, SkillContext.skillFileName));
   if (!skillMdFile.existsSync()) {
-    return;
+    return result;
   }
-
-  final List<SkillRule> rules = [];
-  for (final CheckType check in RuleRegistry.allChecks) {
-    final AnalysisSeverity severity = localRules[check.name] ?? check.defaultSeverity;
-    final SkillRule? rule = RuleRegistry.createRule(check.name, severity);
-    if (rule != null && severity != AnalysisSeverity.disabled) {
-      rules.add(rule);
-    }
-  }
-  rules.addAll(customRules);
 
   String currentContent = context.rawContent;
   final originalContent = currentContent;
   var modified = false;
 
-  for (final rule in rules) {
+  for (final SkillRule rule in validator.rules) {
     if (rule is FixableRule) {
       final bool hasErrors =
           result.validationErrors.any((e) => e.ruleId == rule.name && !e.isIgnored);
       if (hasErrors) {
         try {
-          final String newContent =
-              await (rule as FixableRule).fix('SKILL.md', currentContent, context);
+          final String newContent = await (rule as FixableRule)
+              .fix(SkillContext.skillFileName, currentContent, context.directory);
           if (newContent != currentContent) {
             currentContent = newContent;
             modified = true;
@@ -610,6 +600,9 @@ Future<void> _applyFixesIfNeeded({
       if (!quiet) {
         _log.info('  Applied fixes for $skillName');
       }
+      final ValidationResult newResult = await validator.validate(skillDir);
+      _applyIgnores(newResult, skillIgnores, skillDir);
+      return newResult;
     } else if (fix) {
       if (!quiet) {
         _log.info('  [Dry Run] Proposed changes for $skillName (SKILL.md):');
@@ -617,8 +610,17 @@ Future<void> _applyFixesIfNeeded({
       }
     }
   }
+
+  return result;
 }
 
+/// Prints a simple line-by-line diff between [original] and [modified].
+///
+/// **Limitation**: This naive diff algorithm does not handle line additions or
+/// removals well, as it compares lines at the same index. It is sufficient for
+/// current fixers that only modify existing lines, but should be replaced with
+/// a more robust diffing solution (e.g., `package:diff`) if future fixers
+/// add or remove lines.
 void _printDiff(String original, String modified) {
   final List<String> origLines = original.split('\n');
   final List<String> modLines = modified.split('\n');

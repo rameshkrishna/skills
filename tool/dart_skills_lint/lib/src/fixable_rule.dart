@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'models/skill_context.dart';
+import 'dart:io';
 
 /// Interface for rules that support fixes.
 /// Kept internal to the package for now.
@@ -10,5 +10,10 @@ abstract class FixableRule {
   /// Returns the updated content of the file at [filePath].
   /// [currentContent] is the content after previous fixes have been applied.
   /// If the rule does not support fixing the file at [filePath], it should return [currentContent].
-  Future<String> fix(String filePath, String currentContent, SkillContext context);
+  ///
+  /// Rules should rely on [currentContent] for the current state of the file.
+  /// If a rule needs structured access (like parsed YAML), it should parse
+  /// [currentContent] itself, as structured data in [SkillContext] may be stale
+  /// if previous rules applied fixes.
+  Future<String> fix(String filePath, String currentContent, Directory directory);
 }

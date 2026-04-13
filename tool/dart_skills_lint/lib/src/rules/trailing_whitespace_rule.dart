@@ -2,9 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
 import 'package:meta/meta.dart';
 
-import '../fixer.dart';
+import '../fixable_rule.dart';
 import '../models/analysis_severity.dart';
 import '../models/skill_context.dart';
 import '../models/skill_rule.dart';
@@ -66,7 +67,7 @@ class TrailingWhitespaceRule extends SkillRule implements FixableRule {
   }
 
   @override
-  Future<String> fix(String filePath, String currentContent, SkillContext context) async {
+  Future<String> fix(String filePath, String currentContent, Directory directory) async {
     if (filePath != 'SKILL.md') {
       return currentContent;
     }

@@ -10,6 +10,12 @@ class SkillContext {
     this.yamlParsingError,
   });
 
+  /// The required filename for skill documentation.
+  static const String skillFileName = 'SKILL.md';
+
+  /// Regex to match the YAML frontmatter in SKILL.md.
+  static final RegExp skillStartRegex = RegExp(r'^---\s*\n(.*?)\n---\s*\n', dotAll: true);
+
   final Directory directory;
 
   /// Guaranteed to be non-null because we only run rules if SKILL.md exists.
