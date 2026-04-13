@@ -64,6 +64,12 @@ class Validator {
   /// The name of the special check for missing files or directories.
   static const String pathDoesNotExist = 'path-does-not-exist';
 
+  /// The name of the special check for inaccessible files.
+  static const String skillFileInaccessible = 'skill-file-inaccessible';
+
+  /// The name of the special check for unexpected errors.
+  static const String unexpectedError = 'unexpected-error';
+
   final Map<String, AnalysisSeverity> _customSeverities;
   final List<SkillRule> _customRules;
   late final List<SkillRule> _rules;
@@ -87,7 +93,24 @@ class Validator {
     }
 
     final skillMdFile = File(p.join(dir.path, _skillFileName));
-    final String content = await skillMdFile.readAsString();
+    String content;
+    try {
+      content = await skillMdFile.readAsString();
+    } on FileSystemException catch (e) {
+      validationErrors.add(ValidationError(
+          ruleId: skillFileInaccessible,
+          file: skillMdFile.path,
+          message: 'Failed to read $_skillFileName: $e',
+          severity: _getSeverity(skillFileInaccessible, AnalysisSeverity.error)));
+      return ValidationResult(validationErrors: validationErrors);
+    } catch (e) {
+      validationErrors.add(ValidationError(
+          ruleId: unexpectedError,
+          file: skillMdFile.path,
+          message: 'Unexpected error reading $_skillFileName: $e',
+          severity: _getSeverity(unexpectedError, AnalysisSeverity.error)));
+      return ValidationResult(validationErrors: validationErrors);
+    }
 
     YamlMap? parsedYaml;
     String? yamlParsingError;
