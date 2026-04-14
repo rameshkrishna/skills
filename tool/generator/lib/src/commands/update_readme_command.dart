@@ -42,7 +42,7 @@ class UpdateReadmeCommand extends BaseYamlCommand {
     } else {
       final dirReadme = File(p.join(outputDir.path, 'README.md'));
       final parentReadme = File(p.join(outputDir.parent.path, 'README.md'));
-      
+
       if (dirReadme.existsSync()) {
         readmePath = dirReadme.path;
       } else if (parentReadme.existsSync()) {
