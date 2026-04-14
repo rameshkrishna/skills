@@ -4,11 +4,13 @@
 
 import 'dart:io';
 
+import 'package:dart_skills_lint/src/models/skill_context.dart';
 import 'package:dart_skills_lint/src/rules/description_length_rule.dart';
 import 'package:dart_skills_lint/src/rules/name_format_rule.dart';
 import 'package:dart_skills_lint/src/rules/valid_yaml_metadata_rule.dart';
 import 'package:dart_skills_lint/src/validator.dart';
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
 
 import 'test_utils.dart';
 
@@ -95,8 +97,30 @@ void main() {
         final validator = Validator();
         final ValidationResult result = await validator.validate(skillDir);
         expect(result.isValid, isFalse);
-        expect(result.errors,
-            contains(contains('must exactly match the name of its parent directory')));
+        expect(result.errors, contains(contains('must exactly match the parent directory name')));
+      });
+
+      test('fixes name to match directory name (not replacing underscores)', () async {
+        final Directory skillDir = await Directory('${tempDir.path}/my_skill').create();
+        final file = File('${skillDir.path}/SKILL.md');
+        await file.writeAsString('''
+---
+name: wrong-name
+description: A test skill
+---
+Body''');
+
+        final rule = NameFormatRule();
+        final String content = await file.readAsString();
+        final RegExpMatch? match =
+            RegExp(r'^---\s*\n(.*?)\n---\s*\n', dotAll: true).firstMatch(content);
+        final parsedYaml = loadYaml(match!.group(1)!) as YamlMap?;
+        final context =
+            SkillContext(directory: skillDir, rawContent: content, parsedYaml: parsedYaml);
+
+        final String fixedContent = await rule.fix('SKILL.md', content, context.directory);
+
+        expect(fixedContent, contains('name: my_skill'));
       });
     });
 

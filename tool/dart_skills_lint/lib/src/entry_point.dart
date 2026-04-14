@@ -11,14 +11,15 @@ import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
 import 'config_parser.dart';
+import 'fixable_rule.dart';
 import 'models/analysis_severity.dart';
 import 'models/check_type.dart';
 import 'models/ignore_entry.dart';
+import 'models/skill_context.dart';
 import 'models/skill_rule.dart';
 import 'models/skills_ignores.dart';
 import 'models/validation_error.dart';
 import 'rule_registry.dart';
-
 import 'skills_ignores_storage.dart';
 import 'validator.dart';
 
@@ -32,6 +33,8 @@ const _skillOption = 'skill';
 const _ignoreFileOption = 'ignore-file';
 const _ignoreConfigFlag = 'ignore-config';
 const _generateBaselineFlag = 'generate-baseline';
+const _fixFlag = 'fix';
+const _fixApplyFlag = 'fix-apply';
 
 @visibleForTesting
 const defaultIgnoreFileName = 'dart_skills_lint_ignore.json';
@@ -93,7 +96,9 @@ Future<void> runApp(List<String> args) async {
         negatable: false,
         help: 'Write all current errors into $defaultIgnoreFileName to ignore on future runs.')
     ..addFlag(_ignoreConfigFlag,
-        negatable: false, help: 'Ignore the YAML configuration file entirely.');
+        negatable: false, help: 'Ignore the YAML configuration file entirely.')
+    ..addFlag(_fixFlag, negatable: false, help: 'Preview fixes for failing lints (dry run).')
+    ..addFlag(_fixApplyFlag, negatable: false, help: 'Apply fixes for failing lints.');
 
   final ArgResults results;
   try {
@@ -143,13 +148,15 @@ Future<void> runApp(List<String> args) async {
   final fastFail = results[_fastFailFlag] as bool;
   final quiet = results[_quietFlag] as bool;
   final generateBaseline = results[_generateBaselineFlag] as bool;
+  final fix = results[_fixFlag] as bool;
+  final fixApply = results[_fixApplyFlag] as bool;
 
   String? ignoreFileOverride;
   if (results.wasParsed(_ignoreFileOption)) {
     ignoreFileOverride = results[_ignoreFileOption] as String?;
   }
 
-  final bool success = await validateSkills(
+  final bool success = await validateSkillsInternal(
     skillDirPaths: skillDirPaths,
     individualSkillPaths: individualSkillPaths,
     resolvedRules: resolvedRules,
@@ -157,6 +164,8 @@ Future<void> runApp(List<String> args) async {
     fastFail: fastFail,
     quiet: quiet,
     generateBaseline: generateBaseline,
+    fix: fix,
+    fixApply: fixApply,
     ignoreFileOverride: ignoreFileOverride,
     config: config,
   );
@@ -165,6 +174,9 @@ Future<void> runApp(List<String> args) async {
 }
 
 /// Validates skills based on the provided configuration.
+///
+/// This is the public API for validating skills. It does not support fixing
+/// lints as that feature is currently considered internal to the CLI.
 ///
 /// [skillDirPaths] is a list of directories containing multiple skills.
 /// [individualSkillPaths] is a list of paths to individual skill directories.
@@ -185,6 +197,38 @@ Future<bool> validateSkills({
   bool fastFail = false,
   bool quiet = false,
   bool generateBaseline = false,
+  String? ignoreFileOverride,
+  Configuration? config,
+  List<SkillRule> customRules = const [],
+}) async {
+  return validateSkillsInternal(
+    skillDirPaths: skillDirPaths,
+    individualSkillPaths: individualSkillPaths,
+    resolvedRules: resolvedRules,
+    printWarnings: printWarnings,
+    fastFail: fastFail,
+    quiet: quiet,
+    generateBaseline: generateBaseline,
+    ignoreFileOverride: ignoreFileOverride,
+    config: config,
+    customRules: customRules,
+  );
+}
+
+/// Internal implementation of skill validation that supports fixing.
+///
+/// Kept internal to avoid exposing experimental fix parameters in the public API.
+@visibleForTesting
+Future<bool> validateSkillsInternal({
+  List<String> skillDirPaths = const [],
+  List<String> individualSkillPaths = const [],
+  Map<String, AnalysisSeverity> resolvedRules = const {},
+  bool printWarnings = true,
+  bool fastFail = false,
+  bool quiet = false,
+  bool generateBaseline = false,
+  bool fix = false,
+  bool fixApply = false,
   String? ignoreFileOverride,
   Configuration? config,
   List<SkillRule> customRules = const [],
@@ -231,8 +275,18 @@ Future<bool> validateSkills({
       quiet: quiet,
     );
 
+    final ValidationResult finalResult = await _applyFixesIfNeeded(
+      skillDir: skillDir,
+      result: result,
+      validator: validator,
+      skillIgnores: skillIgnores,
+      fix: fix,
+      fixApply: fixApply,
+      quiet: quiet,
+    );
+
     if (generateBaseline) {
-      await _generateBaselineFile(result, localIgnoreFile, skillDir, skillDir);
+      await _generateBaselineFile(finalResult, localIgnoreFile, skillDir, skillDir);
     }
 
     if (!generateBaseline) {
@@ -245,7 +299,7 @@ Future<bool> validateSkills({
       }
     }
 
-    if (!result.isValid) {
+    if (!finalResult.isValid) {
       globalAnyFailed = true;
       if (fastFail) {
         break;
@@ -304,11 +358,21 @@ Future<bool> validateSkills({
           quiet: quiet,
         );
 
+        final ValidationResult finalResult = await _applyFixesIfNeeded(
+          skillDir: entity,
+          result: result,
+          validator: validator,
+          skillIgnores: ignoresMap[p.basename(entity.path)] ?? [],
+          fix: fix,
+          fixApply: fixApply,
+          quiet: quiet,
+        );
+
         if (generateBaseline) {
-          await _generateBaselineFile(result, localIgnoreFile, rootDir, entity);
+          await _generateBaselineFile(finalResult, localIgnoreFile, rootDir, entity);
         }
 
-        if (!result.isValid) {
+        if (!finalResult.isValid) {
           globalAnyFailed = true;
           if (fastFail) {
             break;
@@ -339,7 +403,7 @@ Future<bool> validateSkills({
     var foundSingleSkillPassedToD = false;
     for (final rootPath in skillDirPaths) {
       final String expandedRootPath = _expandPath(rootPath);
-      final skillMdFile = File(p.join(expandedRootPath, 'SKILL.md'));
+      final skillMdFile = File(p.join(expandedRootPath, SkillContext.skillFileName));
       if (skillMdFile.existsSync()) {
         _log.severe(
             'Directory "$expandedRootPath" appears to be an individual skill. Use --skill / -s instead of -d / --skills-directory.');
@@ -481,6 +545,98 @@ Future<ValidationResult> _validateSingleSkill({
   _applyIgnores(result, skillIgnores, skillDir);
   _printValidationResult(result, printWarnings, quiet);
   return result;
+}
+
+Future<ValidationResult> _applyFixesIfNeeded({
+  required Directory skillDir,
+  required ValidationResult result,
+  required Validator validator,
+  required List<IgnoreEntry> skillIgnores,
+  required bool fix,
+  required bool fixApply,
+  required bool quiet,
+}) async {
+  if (!fix && !fixApply) {
+    return result;
+  }
+
+  final SkillContext? context = result.context;
+  if (context == null) {
+    return result;
+  }
+
+  final String skillName = p.basename(skillDir.path);
+  final skillMdFile = File(p.join(skillDir.path, SkillContext.skillFileName));
+  if (!skillMdFile.existsSync()) {
+    return result;
+  }
+
+  String currentContent = context.rawContent;
+  final originalContent = currentContent;
+  var modified = false;
+
+  for (final SkillRule rule in validator.rules) {
+    if (rule is FixableRule) {
+      final bool hasErrors =
+          result.validationErrors.any((e) => e.ruleId == rule.name && !e.isIgnored);
+      if (hasErrors) {
+        try {
+          final String newContent = await (rule as FixableRule)
+              .fix(SkillContext.skillFileName, currentContent, context.directory);
+          if (newContent != currentContent) {
+            currentContent = newContent;
+            modified = true;
+          }
+        } catch (e) {
+          _log.severe("  Failed to apply fix for rule '${rule.name}': $e");
+        }
+      }
+    }
+  }
+
+  if (modified) {
+    if (fixApply) {
+      await skillMdFile.writeAsString(currentContent);
+      if (!quiet) {
+        _log.info('  Applied fixes for $skillName');
+      }
+      final ValidationResult newResult = await validator.validate(skillDir);
+      _applyIgnores(newResult, skillIgnores, skillDir);
+      return newResult;
+    } else if (fix) {
+      if (!quiet) {
+        _log.info('  [Dry Run] Proposed changes for $skillName (SKILL.md):');
+        _printDiff(originalContent, currentContent);
+      }
+    }
+  }
+
+  return result;
+}
+
+/// Prints a simple line-by-line diff between [original] and [modified].
+///
+/// **Limitation**: This naive diff algorithm does not handle line additions or
+/// removals well, as it compares lines at the same index. It is sufficient for
+/// current fixers that only modify existing lines, but should be replaced with
+/// a more robust diffing solution (e.g., `package:diff`) if future fixers
+/// add or remove lines.
+void _printDiff(String original, String modified) {
+  final List<String> origLines = original.split('\n');
+  final List<String> modLines = modified.split('\n');
+  final int maxLines = origLines.length > modLines.length ? origLines.length : modLines.length;
+  for (var i = 0; i < maxLines; i++) {
+    final String orig = i < origLines.length ? origLines[i] : '';
+    final String mod = i < modLines.length ? modLines[i] : '';
+    if (orig != mod) {
+      if (orig.isNotEmpty) {
+        _log.info('- Line ${i + 1}: $orig');
+      }
+      if (mod.isNotEmpty) {
+        _log.info('+ Line ${i + 1}: $mod');
+      }
+    }
+  }
 }
 
 Future<void> _generateBaselineFile(ValidationResult result, String? ignoreFileOverride,

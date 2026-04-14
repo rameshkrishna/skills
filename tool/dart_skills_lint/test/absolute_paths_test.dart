@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:dart_skills_lint/src/models/analysis_severity.dart';
+import 'package:dart_skills_lint/src/models/skill_context.dart';
 
 import 'package:dart_skills_lint/src/rules/absolute_paths_rule.dart';
 import 'package:dart_skills_lint/src/rules/relative_paths_rule.dart';
@@ -108,6 +109,39 @@ void main() {
       expect(result.errors, isEmpty);
       expect(result.warnings,
           contains(contains('Absolute filepath found in link: /absolute/path.md')));
+    });
+
+    test('fixes absolute path to relative if file exists', () async {
+      final Directory skillDir = await Directory('${tempDir.path}/test-skill').create();
+      final File targetFile = await File('${tempDir.path}/target.md').create();
+
+      await File('${skillDir.path}/SKILL.md')
+          .writeAsString('${buildFrontmatter(name: 'test-skill')}[Link](${targetFile.path})\n');
+
+      final rule = AbsolutePathsRule();
+      final file = File('${skillDir.path}/SKILL.md');
+      final String content = await file.readAsString();
+      final context = SkillContext(directory: skillDir, rawContent: content);
+
+      final String fixedContent = await rule.fix('SKILL.md', content, context.directory);
+
+      expect(fixedContent, contains('(../target.md)'));
+    });
+
+    test('does not fix absolute path if file does not exist', () async {
+      final Directory skillDir = await Directory('${tempDir.path}/test-skill').create();
+
+      await File('${skillDir.path}/SKILL.md')
+          .writeAsString('${buildFrontmatter(name: 'test-skill')}[Link](/non/existent/file.md)\n');
+
+      final rule = AbsolutePathsRule();
+      final file = File('${skillDir.path}/SKILL.md');
+      final String content = await file.readAsString();
+      final context = SkillContext(directory: skillDir, rawContent: content);
+
+      final String fixedContent = await rule.fix('SKILL.md', content, context.directory);
+
+      expect(fixedContent, contains('(/non/existent/file.md)'));
     });
   });
 }

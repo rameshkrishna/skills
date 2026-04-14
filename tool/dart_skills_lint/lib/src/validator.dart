@@ -24,7 +24,11 @@ class ValidationResult {
   ValidationResult({
     this.validationErrors = const [],
     List<String> warnings = const [],
+    this.context,
   }) : _manualWarnings = warnings;
+
+  /// The context used during validation.
+  final SkillContext? context;
 
   /// Whether the skill directory is valid according to the specification.
   bool get isValid =>
@@ -59,7 +63,7 @@ class Validator {
         _customRules = customRules ?? [] {
     _rules = _buildRules();
   }
-  static const _skillFileName = 'SKILL.md';
+  static const String _skillFileName = SkillContext.skillFileName;
 
   /// The name of the special check for missing files or directories.
   static const String pathDoesNotExist = 'path-does-not-exist';
@@ -74,11 +78,12 @@ class Validator {
   final List<SkillRule> _customRules;
   late final List<SkillRule> _rules;
 
+  /// Returns the rules used by this validator.
+  List<SkillRule> get rules => _rules;
+
   AnalysisSeverity _getSeverity(String name, AnalysisSeverity defaultSeverity) {
     return _customSeverities[name] ?? defaultSeverity;
   }
-
-  static final _skillStartRegex = RegExp(r'^---\s*\n(.*?)\n---\s*\n', dotAll: true);
 
   /// Validates a single skill directory.
   ///
@@ -115,7 +120,7 @@ class Validator {
     YamlMap? parsedYaml;
     String? yamlParsingError;
     try {
-      final RegExpMatch? match = _skillStartRegex.firstMatch(content);
+      final RegExpMatch? match = SkillContext.skillStartRegex.firstMatch(content);
       if (match != null) {
         final String yamlStr = match.group(1)!;
         final Object? doc = loadYaml(yamlStr);
@@ -151,6 +156,7 @@ class Validator {
 
     return ValidationResult(
       validationErrors: validationErrors,
+      context: context,
     );
   }
 
