@@ -84,5 +84,71 @@ void main() {
       expect(result.errors, isEmpty);
       expect(result.warnings, isEmpty); // None of these should trigger local file checks
     });
+
+    test('passes with valid relative image path and title', () async {
+      final Directory skillDir = await Directory('${tempDir.path}/test-skill').create();
+      await File('${skillDir.path}/SKILL.md').writeAsString(
+          '${buildFrontmatter(name: 'test-skill')}![Accessible description](images/screenshot.png "Hover description")\n');
+
+      final Directory imgDir = await Directory('${skillDir.path}/images').create();
+      await File('${imgDir.path}/screenshot.png').writeAsString('image content');
+
+      final validator =
+          Validator(ruleOverrides: {RelativePathsRule.ruleName: AnalysisSeverity.warning});
+      final ValidationResult result = await validator.validate(skillDir);
+
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.warnings, isEmpty);
+    });
+
+    test('passes with relative path containing line fragments', () async {
+      final Directory skillDir =
+          await Directory('${tempDir.path}/a/b/c/test-skill').create(recursive: true);
+      await File('${skillDir.path}/SKILL.md').writeAsString(
+          '${buildFrontmatter(name: 'test-skill')}[Link to lines](../../../CONTRIBUTING.md#L64-L80)\n');
+
+      await File('${tempDir.path}/a/CONTRIBUTING.md').create(recursive: true);
+
+      final validator =
+          Validator(ruleOverrides: {RelativePathsRule.ruleName: AnalysisSeverity.warning});
+      final ValidationResult result = await validator.validate(skillDir);
+
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.warnings, isEmpty);
+    });
+
+    test('passes with relative path containing anchor fragments', () async {
+      final Directory skillDir = await Directory('${tempDir.path}/test-skill').create();
+      await File('${skillDir.path}/SKILL.md').writeAsString(
+          '${buildFrontmatter(name: 'test-skill')}[Link to section](styleguide.md#miscellaneous-languages)\n');
+
+      await File('${skillDir.path}/styleguide.md').writeAsString('Styleguide content');
+
+      final validator =
+          Validator(ruleOverrides: {RelativePathsRule.ruleName: AnalysisSeverity.warning});
+      final ValidationResult result = await validator.validate(skillDir);
+
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.warnings, isEmpty);
+    });
+
+    test('passes with leading and trailing whitespace in link', () async {
+      final Directory skillDir = await Directory('${tempDir.path}/test-skill').create();
+      await File('${skillDir.path}/SKILL.md').writeAsString(
+          '${buildFrontmatter(name: 'test-skill')}[Link with whitespace]( styleguide.md )\n');
+
+      await File('${skillDir.path}/styleguide.md').writeAsString('Styleguide content');
+
+      final validator =
+          Validator(ruleOverrides: {RelativePathsRule.ruleName: AnalysisSeverity.warning});
+      final ValidationResult result = await validator.validate(skillDir);
+
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.warnings, isEmpty);
+    });
   });
 }
