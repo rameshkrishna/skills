@@ -175,3 +175,49 @@
     - https://docs.flutter.dev/resources/architectural-overview
     - https://docs.flutter.dev/resources/faq
     - https://docs.flutter.dev/ui/layout/tutorial
+- name: flutter-build-responsive-layout
+  description: Use `LayoutBuilder`, `MediaQuery`, or `Expanded/Flexible` to
+    create a layout that adapts to different screen sizes. Use when you need the
+    UI to look good on both mobile and tablet/desktop form factors.
+  instructions: |
+    1.  **Determine the available space**:
+        *   Use `MediaQuery.sizeOf(context)` or `LayoutBuilder` to get the size of the window your app is currently running in.
+        *   `LayoutBuilder` builds a widget tree that can depend on the parent widget's size. Its builder callback provides `BoxConstraints` from its parent, which can be used to return different widgets based on the available space.
+        *   Avoid using `MediaQuery.orientationOf` or `OrientationBuilder` near the top of your widget tree to switch between different app layouts, as the device's orientation doesn't necessarily inform you of the app window's space.
+        *   Do not check for hardware types like "phone" or "tablet" when making layout decisions, as the space an app renders in isn't always tied to the full screen size of the device. Flutter apps can run in resizable windows, multi-window modes, or picture-in-picture.
+        *   For large screen devices, `MediaQuery` can be used to get the app window size rather than the physical device size.
+        *   Another approach is to use the `maxWidth` property of `BoxConstraints` by wrapping a widget like `GridView` in a `ConstrainedBox` or `Container`.
+
+    2.  **Implement adaptive layouts based on available space**:
+        *   Use `LayoutBuilder` to return different layouts based on the `BoxConstraints` received. For example, you can check `constraints.maxWidth` to determine if the screen is large (e.g., `maxWidth > largeScreenMinWidth`) and return a different widget tree accordingly.
+        *   For small screens, you might use a navigation-style approach, while for large screens, you could use a `Row` to place elements side-by-side.
+        *   Consider using adaptive breakpoints, such as those recommended by Material Design.
+
+    3.  **Manage widget sizing and positioning within layouts**:
+        *   Utilize `Expanded` and `Flexible` widgets within `Row`, `Column`, or `Flex` to distribute available space among children.
+        *   `Expanded` stretches a child to fill any remaining available space. It is equivalent to `Flexible` with a `flex` factor of 1.0.
+        *   `Flexible` allows a child to be sized to a specific size while still allowing it to expand or contract. You can specify a `flex` factor to determine the ratio in which `Expanded` or `Flexible` children consume available space. For example, a `flex` factor of 2 will make a widget twice as wide as others with a `flex` factor of 1.
+        *   To prevent widgets from gobbling up all horizontal space on large screens, consider constraining their width.
+        *   For lists with an unknown number of items, `ListView.builder` can be used to lazily render items.
+
+    4.  **Consider specific device and orientation behaviors**:
+        *   Avoid locking screen orientation, as it can cause issues on foldable devices, potentially leading to letterboxing where the app is centered with black borders.
+        *   If screen orientation must be locked (though generally discouraged), use the `Display API` to get physical screen dimensions instead of `MediaQuery`. The `Display API` is useful in situations where `MediaQuery` might not receive the larger window size due to compatibility modes.
+        *   Android and Flutter design guidance recommends not locking screen orientation. Android large format tiers require both portrait and landscape support.
+        *   Support a variety of input devices, including basic mice, trackpads, and keyboard shortcuts.
+  resources:
+    - https://docs.flutter.dev/cookbook/design/orientation
+    - https://docs.flutter.dev/get-started/fundamentals/layout
+    - https://docs.flutter.dev/learn/pathway/tutorial/adaptive-layout
+    - https://docs.flutter.dev/release/breaking-changes/layout-builder-optimization
+    - https://docs.flutter.dev/testing/common-errors
+    - https://docs.flutter.dev/ui
+    - https://docs.flutter.dev/ui/adaptive-responsive
+    - https://docs.flutter.dev/ui/adaptive-responsive/best-practices
+    - https://docs.flutter.dev/ui/adaptive-responsive/general
+    - https://docs.flutter.dev/ui/adaptive-responsive/large-screens
+    - https://docs.flutter.dev/ui/adaptive-responsive/safearea-mediaquery
+    - https://docs.flutter.dev/ui/layout
+    - https://docs.flutter.dev/ui/layout/constraints
+    - https://docs.flutter.dev/ui/layout/tutorial
+    - https://docs.flutter.dev/ui/widgets/layout
