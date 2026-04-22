@@ -91,8 +91,8 @@ List<Photo> parsePhotos(String responseBody) {
 }
 
 // 2. Network execution with background parsing
-Future<List<Photo>> fetchPhotos(http.Client client) async {
-  final response = await client.get(
+Future<List<Photo>> fetchPhotos() async {
+  final response = await http.get(
     Uri.parse('https://jsonplaceholder.typicode.com/photos'),
     headers: {
       HttpHeaders.authorizationHeader: 'Bearer your_token_here',
@@ -106,6 +106,7 @@ Future<List<Photo>> fetchPhotos(http.Client client) async {
   } else {
     throw Exception('Failed to load photos. Status: ${response.statusCode}');
   }
+}
 }
 
 // 3. Strongly typed model
