@@ -35,7 +35,27 @@ Future<void> main(List<String> arguments) async {
 -   Put complex logic directly in `bin/my_app.dart`.
 -   Define classes or heavy functions in the entrypoint.
 
-### Executable Scripts
+### Put an `executable` entry in `pubspec.yaml`
+
+List your executables in `pubspec.yaml` to make them available for global
+activation and clean invocation via `dart run`.
+
+**DO:**
+Add an `executables` section mapping the command name to the Dart file in
+`bin/` (excluding the `.dart` extension).
+
+```yaml
+executables:
+  my_app: # Maps to bin/my_app.dart
+  custom_name: main # Maps to bin/main.dart
+```
+
+Then run via `dart run my_app` or `dart run custom_name`.
+
+### CONSIDER `#!` for other scripts on *nix systems
+
+This is NOT a hard and fast rule, but it is something to consider.
+
 For CLI tools intended to be run directly on Linux and Mac, add a shebang and
 ensure the file is executable.
 
@@ -95,12 +115,28 @@ Future<void> main(List<String> arguments) async {
 
 ### Cross-Platform Compatibility (Windows Support)
 When writing CLI applications and tests, ensure compatibility with Windows:
-- **Paths**: Never hardcode path separators like `/`. Use `package:path`'s
-  `p.join` or `p.normalize` to construct paths portably.
+- **Paths**: Avoid hardcoding path separators like `/` because Windows uses `\`.
+  Use `package:path`'s `p.join` or `p.normalize` to construct paths portably.
 - **File Permissions**: When testing file permission errors, remember that
   `chmod` is not available on Windows. Use `icacls` on Windows or appropriate
-  mock libraries. Never skip tests on Windows simply because of permission
-  commands if a Windows equivalent exists.
+  mock libraries to simulate permission errors. Never skip tests on Windows
+  simply because of permission commands if a Windows equivalent exists.
+
+## Discovery
+
+To find areas to apply these best practices:
+
+### Heavy Entrypoints
+Inspect files in `bin/` to see if they contain logic that should be in `lib/`:
+- **Target**: Files matching `bin/*.dart`.
+
+### Direct Process Termination
+Search for calls to `exit()` instead of setting `exitCode`:
+- **Regex**: `\bexit\(`
+
+### Hardcoded Path Separators
+Search for hardcoded `/` in strings that appear to be file paths:
+- **Regex**: `['"][^'"]+/[^'"]+['"]` (Verify context as this may match URLs).
 
 ## 3. Recommended Packages
 

@@ -4,37 +4,57 @@
     "dart-best-practices": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "1eb4a38aa94060d3d420f1b03b661ad784a1cd732ffb7ff4d8369d085024d4f5"
+      "computedHash": "1f529bd357368f67621de2c25531f69e16f726ecbe0071aabbf47b6d7b2a16c4"
+    },
+    "dart-checks-migration": {
+      "source": "kevmoo/dash_skills",
+      "sourceType": "github",
+      "computedHash": "15592bf08008e2a37da5d1f4dc6b99dae01ce0db1ec7127f97cdfac3d6bcfb5d"
     },
     "dart-cli-app-best-practices": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "6bd4fd96c0ac4dc59699332948ff9a8a724e9d3093cf13d28b542c7e70c92809"
+      "computedHash": "83487d2341e4b692d180fe6c9fc402706a5707aba227424db016182006cfdf30"
     },
     "dart-doc-validation": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "5b2c3fd7a30ee04b35ef8914ea945efbec49087e4bd99fb211f421a12e43dc2e"
+      "computedHash": "acc150afe3406de17059f9215fa009ffeb1b7c0815f903c2af303380e90055c4"
+    },
+    "dart-long-lines": {
+      "source": "kevmoo/dash_skills",
+      "sourceType": "github",
+      "computedHash": "db6543389e683823446c7ee27fb162f219cc47f209809b9fd79b012bdb944991"
     },
     "dart-matcher-best-practices": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "11b0b422a571cab62fb7f945ba548947200cd22a5a8f7b5627af636d002c4ad9"
+      "computedHash": "99a200dca8676e865b97a81abe40e8f9e2b9afdbd0f82845c1e3c8dd7eae007b"
     },
     "dart-modern-features": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "cb4cda90e1451aaa5a9a7d4d81358dc563ec07499ce1c18d282882d9c1bdae4e"
+      "computedHash": "3148ee2c96c296593d3cd704d4bd99af25c84237a40c07acad5696328555907a"
     },
     "dart-package-maintenance": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "1bab37315f9ba1b6f6850a7563d58b5728c14b23a712bd391e3972c8dd84864a"
+      "computedHash": "92efdb1b873eec4e0bcb61ade541b954eee347c3ddd70c27ba22c982c318d7e6"
+    },
+    "dart-test-coverage": {
+      "source": "kevmoo/dash_skills",
+      "sourceType": "github",
+      "computedHash": "38e3264a1d9f9f3687eb460ac66889432e0f2319857ba5a221df5dce31e6fe2d"
     },
     "dart-test-fundamentals": {
       "source": "kevmoo/dash_skills",
       "sourceType": "github",
-      "computedHash": "fee07d6fdcfd2d5f73f055a165a24ff70e4de5fbf36678e95c4d9b299ec5fb5b"
+      "computedHash": "0d6e877c3575136909afa4f9daa82ed48c713a3052f8e211b2476043b0438bf7"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "computedHash": "784f0dbb7403b0f00324bce9a112f715342777a0daee7bbb7385f9c6f0a170ea"
     },
     "test-driven-development": {
       "source": "obra/superpowers",

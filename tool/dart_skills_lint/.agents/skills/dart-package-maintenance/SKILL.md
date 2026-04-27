@@ -12,6 +12,15 @@ description: |-
 Guidelines for maintaining Dart packages in alignment with Dart team best
 practices.
 
+## Discovery
+
+To find maintenance tasks or inconsistencies:
+
+### Consistency Checks
+Ensure the latest version in `CHANGELOG.md` matches `pubspec.yaml`:
+- Compare the top header in `CHANGELOG.md` with the `version:` field in
+  `pubspec.yaml`.
+
 ## Versioning
 
 ### Semantic Versioning
@@ -40,6 +49,14 @@ practices.
     - **New Features**: Bump Minor, reset Patch
       (e.g., `1.1.0-wip`, `0.4.5-wip`).
     - **Bug Fixes**: Bump Patch (e.g., `1.0.1-wip`).
+
+### Changelog Content
+- **Focus on User Impact**: Entries in `CHANGELOG.md` should focus on changes
+  visible to or impacting the end-user (e.g., new features, bug fixes,
+  breaking changes).
+- **Omit Internal Changes**: Do not include internal refactorings, test
+  changes, or other modifications that do not affect the package's behavior
+  or API for the user.
 
 ### Work-in-Progress (WIP) Versions
 - Immediately after a publish, or on the first change after a publish, update
