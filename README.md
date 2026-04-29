@@ -2,7 +2,9 @@
 
 **NOTE: This repository is currently in development and is not yet ready for use.**
 
-This repository contains agent skills for Flutter.
+Agent skills for Flutter, maintained by the Flutter team.
+
+You can also install the [Agent Skills for Dart](https://github.com/dart-lang/skills) for Dart tasks.
 
 ## Installation
 
