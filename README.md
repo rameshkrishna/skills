@@ -14,12 +14,6 @@ folder that most agents use.
 npx skills add flutter/skills --skill '*' --agent universal
 ```
 
-To ensure the skills are added in the standard `.agents/skills`, use the following:
-
-```bash
-npx skills add flutter/skills --skill '*' --agent universal
-```
-
 ## Updating Skills
 
 To update, run the following command:
